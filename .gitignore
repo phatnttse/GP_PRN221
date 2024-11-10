@@ -1,0 +1,45 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bin/
+obj/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+*.db
+*.db-journal
+
+# ASP.NET
+# appsettings*.json
+*.publish.xml
+*.pdb
+*.cache
+*.scc
+
+# User secrets
+secrets.json
+
+# Visual Studio Code
+.vscode/
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+*.symbols.nupkg
+
+# IIS
+*.vspscc
+
+# Temporary ASP.NET files
+Temporary ASP.NET Files/
