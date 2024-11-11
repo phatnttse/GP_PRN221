@@ -1,0 +1,33 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.Admin.CategoryManagement.IndexModel
+@{
+    Layout = "_LayoutAdmin";
+}
+<h2>Category Management</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.FlowerCategories)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>
+                    <img src="@category.ImageUrl" alt="@category.Name" style="width: 50px; height: 50px; object-fit: cover;" />
+                </td>
+                <td>
+                    <a href="/Admin/CategoryManagement/Edit?id=@category.Id" class="btn btn-primary">Edit</a>
+                    <a href="/Admin/CategoryManagement/Delete?id=@category.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="/Admin/CategoryManagement/Create" class="btn btn-success">Add New Category</a>
