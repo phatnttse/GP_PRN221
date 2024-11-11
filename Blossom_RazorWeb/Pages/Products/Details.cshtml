@@ -1,0 +1,59 @@
+﻿@page "{id}"
+@model Blossom_RazorWeb.Pages.Products.DetailsModel
+@{
+    ViewData["Title"] = "Flower Details";
+    Layout = "_Layout";
+    var flower = Model.Flower;
+    var sellerInfo = Model.SellerInfo;
+}
+
+<div class="container my-5">
+    <div class="row gx-5">
+        <!-- Flower Image Section -->
+        <aside class="col-lg-6">
+            <div class="border rounded-4 mb-3 d-flex justify-content-center">
+                <a class="rounded-4" target="_blank">
+                    <img style="max-width: 100%; max-height: 100vh;" 
+                         src="@flower.ImageUrl" 
+                         alt="@flower?.Name" />
+                </a>
+            </div>
+        </aside>
+
+        <!-- Flower Details Section -->
+        <main class="col-lg-6">
+            <div class="ps-lg-3">
+                <h4 class="title primary-color">@flower?.Name</h4>
+                <div class="d-flex flex-row my-3">
+                    <div class="text-black mb-1 me-3">
+                        <span>Lượt xem: @flower?.Views</span>
+                    </div>
+                    <span class="text-black me-3">
+                        <i class="fas fa-shopping-basket me-2"></i> 
+                        @flower?.StockQuantity items available
+                    </span>
+                    <span class="@((flower?.StockQuantity > 0) ? "text-success" : "text-danger") me-3 fw-bold">
+                        @(flower?.StockQuantity > 0 ? "In Stock" : "Out of Stock")
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <span class="h5 fw-bold text-danger">@String.Format("{0:0,0}₫", flower?.Price)</span>
+                </div>
+
+                <p class="text-black">@flower?.Description</p>
+
+                <div class="row mb-4">
+                    <h6 class="mb-2 d-block text-secondary">Quantity</h6>
+                    <div class="input-group mb-4" style="width: 170px">
+                        <button class="btn btn-white border" type="button" onclick="decreaseQuantity()">-</button>
+                        <input type="text" class="form-control text-center border" readonly value="@Model.Quantity" />
+                        <button class="btn btn-white border" type="button" onclick="increaseQuantity()">+</button>
+                    </div>
+                    <button class="btn btn-primary" onclick="buyNow(@flower?.Id)">Buy Now</button>
+                    <button class="btn btn-secondary" onclick="addToCart(@flower?.Id)">Add to Cart</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
