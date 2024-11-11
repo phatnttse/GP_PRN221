@@ -23,8 +23,10 @@
             <div class="header">
                 <div class="logo logo-dark">
                     <a href="/">
-                        <img style="width: 50px" src="assets/images/Blossom.png" alt="Logo">
-                        <img class="logo-fold" src="assets/images/logo/logo-fold.png" alt="Logo">
+                        <img width="60px"
+                                 src="~/assets/images/Blossom.png"
+                                 alt="logo"
+                                 class="img-fluid" />
                     </a>
                 </div>
                 <div class="logo logo-white">
@@ -163,62 +165,33 @@
             <div class="side-nav">
                 <div class="side-nav-inner">
                     <ul class="side-nav-menu scrollable">
-                        <li class="nav-item dropdown">
-                            <a href="">
+                        <!-- Other Nav Items -->
+
+                        <li class="nav-item">
+                            <a href="/Admin/FlowerManagement/Index">
                                 <span class="icon-holder">
-                                    <i class="anticon anticon-dashboard"></i>
+                                    <i class="anticon anticon-flower"></i> <!-- Example icon for flower -->
                                 </span>
-                                <span class="title">Single Link</span>
+                                <span class="title">Flowers</span>
                             </a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="dropdown-toggle" href="javascript:void(0);">
+                        <li class="nav-item">
+                            <a href="/Admin/CategoryManagement/Index">
                                 <span class="icon-holder">
-                                    <i class="anticon anticon-pie-chart"></i>
+                                    <i class="anticon anticon-category"></i> <!-- Example icon for categories -->
                                 </span>
-                                <span class="title">Dropdown</span>
-                                <span class="arrow">
-                                    <i class="arrow-icon"></i>
-                                </span>
+                                <span class="title">Categories</span>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="">Dropdown 1</a>
-                                </li>
-                                <li>
-                                    <a href="">Dropdown 2</a>
-                                </li>
-                            </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="dropdown-toggle" href="javascript:void(0);">
+                        <li class="nav-item">
+                            <a href="/Admin/Orders/Index">
                                 <span class="icon-holder">
-                                    <i class="anticon anticon-file"></i>
+                                    <i class="anticon anticon-receipt"></i> <!-- Example icon for orders -->
                                 </span>
-                                <span class="title">Multi Level</span>
-                                <span class="arrow">
-                                    <i class="arrow-icon"></i>
-                                </span>
+                                <span class="title">Orders</span>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item dropdown">
-                                    <a href="javascript:void(0);">
-                                        <span>Level 1</span>
-                                        <span class="arrow">
-                                            <i class="arrow-icon"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="">Level 2.1</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Level 2.2</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
                         </li>
+                        
                     </ul>
                 </div>
             </div>
