@@ -7,6 +7,7 @@
         public class Flower : BaseEntity
         {
 
+            [Required]
             [ForeignKey("Seller")]
             public string SellerId { get; set; }
 
@@ -28,7 +29,7 @@
             [EnumDataType(typeof(FlowerStatus))]
             public FlowerStatus Status { get; set; }
 
-            public string RejectReason { get; set; }
+            public string? RejectReason { get; set; }
 
             public int Views { get; set; }
 

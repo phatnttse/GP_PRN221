@@ -1,0 +1,113 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.Products.IndexModel
+@{
+}
+@{
+    ViewData["Title"] = "Product List";
+    Layout = "_Layout";
+}
+
+<section class="section-product">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar for categories -->
+            <div class="col-12 col-lg-3 order-1 order-lg-1">
+                <aside>
+                    <div class="mb-5">
+                        <h5 class="mb-4">Categories</h5>
+                        <ul class="nav nav-link flex-column">
+                            @foreach (var category in Model.Categories)
+                            {
+                                <li class="nav-item">
+                                    <input type="checkbox" id="subcategory-@category.Id" />
+                                    <label for="subcategory-@category.Id">@category.Name</label>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Product List Section -->
+            <div class="col-12 col-lg-9 order-2 order-lg-2">
+                <div class="d-flex align-items-center justify-content-between mb-5">
+                    <h3 class="text-dark fw-bold" style="margin-top: 20px;">
+                        @Model.TitleSearch
+                        @if (!string.IsNullOrEmpty(Model.SearchString))
+                        {
+                            <strong class="primary-color">'@Model.SearchString'</strong>
+                        }
+                    </h3>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3">
+                    @foreach (var flower in Model.Flowers)
+                    {
+                        <div class="col">
+                            <div class="product-item">
+                                <figure>
+                                    <a href="javascript:;" title="@flower.Name" onclick="location.href='@Url.Page("Details", new { id = flower.Id })'">
+                                        <img src="@flower.ImageUrl" alt="@flower.Name" class="tab-image w-100" />
+                                    </a>
+                                </figure>
+                                <div class="d-flex flex-column text-center">
+                                    <a href="javascript:;" class="product-name" onclick="location.href='@Url.Page("Details", new { id = flower.Id })'">
+                                        <h3 class="fs-6 fw-bold">@flower.Name</h3>
+                                    </a>
+                                    <div class="product-description">
+                                        <p class="m-0 p-0 fs-7">@flower.Description</p>
+                                    </div>
+                                    <div>
+                                            <span class="badge rounded-pill bg-light text-dark">@flower.FlowerCategory.Name</span>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                        <span class="text-dark fs-5 fw-semibold">@flower.Price.ToString("N0")₫</span>
+                                    </div>
+                                    <div class="button-area p-3 pt-0">
+                                        <a href="javascript:;" class="btn btn-primary rounded-1 p-2 fs-7 fw-bold btn-cart" onclick="addToCart(@flower.Id, 1)">
+                                            <div class="d-flex align-items-center justify-content-center gap-1">
+                                                <svg width="28" height="28"><use xlink:href="#cart"></use></svg>
+                                                Add to cart
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="d-flex justify-content-center mt-5">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                @if (Model.CurrentPage > 0)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:;" onclick="changePage(@(Model.CurrentPage - 1))">Previous</a>
+                                    </li>
+                                }
+                                @for (int i = 1; i <= Model.TotalPages; i++)
+                                {
+                                    <li class="page-item @(i == Model.CurrentPage + 1 ? "active" : "")">
+                                        <a class="page-link" href="javascript:;" onclick="changePage(@(i - 1))">@i</a>
+                                    </li>
+                                }
+                                @if (Model.CurrentPage < Model.TotalPages - 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="javascript:;" onclick="changePage(@(Model.CurrentPage + 1))">Next</a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+

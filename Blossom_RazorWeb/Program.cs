@@ -54,10 +54,13 @@ namespace Blossom_RazorWeb
 
             builder.Services.AddScoped<AccountDAO>();
             builder.Services.AddScoped<FlowerDAO>();
+            builder.Services.AddScoped<FlowerCategoryDAO>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-            builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();
+            builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();            
+            builder.Services.AddScoped<IFlowerCategoryRepository, FlowerCategoryRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IFlowerService, FlowerService>();
+            builder.Services.AddScoped<IFlowerCategoryService, FlowerCategoryService>();
 
             // Add services to the container.
             builder.Services.AddRazorPages();
