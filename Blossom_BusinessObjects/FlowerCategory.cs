@@ -10,5 +10,7 @@ namespace Blossom_BusinessObjects.Entities
 
         [Required]
         public string ImageUrl { get; set; }
+
+        //public virtual ICollection<Flower> Flowers { get; set; } = new List<Flower>();
     }
 }

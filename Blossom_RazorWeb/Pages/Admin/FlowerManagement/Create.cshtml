@@ -1,0 +1,71 @@
+﻿@page
+@model CreateModel
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Create New Flower";
+}
+
+<h2>Create New Flower</h2>
+
+<form method="post">
+    <div class="form-group">
+        <input hidden type="text" class="form-control" id="SellerId" name="Flower.SellerId" required value="@HttpContext.Session.GetString("UserId")" />
+    </div>
+
+    <div class="form-group">
+        <label for="FlowerCategoryId">Flower Category</label>
+        <select class="form-control" id="FlowerCategoryId" name="Flower.FlowerCategoryId" required>
+            <option value="">-- Select Flower Category --</option>
+            @foreach (var category in Model.FlowerCategories)
+            {
+
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="Name">Flower Name</label>
+        <input type="text" class="form-control" id="Name" name="Flower.Name" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea class="form-control" id="Description" name="Flower.Description" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="Price">Price</label>
+        <input type="number" step="0.01" class="form-control" id="Price" name="Flower.Price" required />
+    </div>
+
+    <div class="form-group">
+        <label for="StockQuantity">Stock Quantity</label>
+        <input type="number" class="form-control" id="StockQuantity" name="Flower.StockQuantity" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Address">Address</label>
+        <input type="text" class="form-control" id="Address" name="Flower.Address" />
+    </div>
+
+    <div class="form-group">
+        <label for="ImageUrl">Image URL</label>
+        <input type="text" class="form-control" id="ImageUrl" name="Flower.ImageUrl" />
+    </div>
+
+    <div class="form-group">
+        <label for="Status">Status</label>
+        <select class="form-control" id="Status" name="Flower.Status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="Rejected">Rejected</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="RejectReason">Reject Reason</label>
+        <textarea class="form-control" id="RejectReason" name="Flower.RejectReason"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
