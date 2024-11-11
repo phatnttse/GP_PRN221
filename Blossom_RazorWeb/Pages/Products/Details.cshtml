@@ -57,3 +57,93 @@
         </main>
     </div>
 </div>
+
+
+<!-- Seller Info -->
+<section class="py-3">
+    <div class="container">
+        <div class="shop-info row align-items-center">
+            <!-- Seller Avatar -->
+            <div class="col-md-3 text-center">
+                <img class="rounded-circle" src="@flower.Seller.Avatar" alt="@flower.Seller.FullName" width="100" height="100" />
+            </div>
+
+            <!-- Seller Name and Rating -->
+            <div class="col-md-3 text-center">
+                <h5 class="shop-name">@flower.Seller.FullName</h5>
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="material-icons fw-bold" style="color: #f6db30">star</i>
+                    <span class="ms-1">
+                        Đánh giá: <strong>@Model.SellerRatingAverage</strong> (@Model.SellerRatingCount Đánh giá)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Product Count -->
+            <div class="col-md-3 text-center">
+                <h6 class="text-muted">Đã bán @Model.SellerProductCount sản phẩm</h6>
+            </div>
+
+            <!-- Visit Shop Button -->
+            <div class="col-md-3 text-center">
+                <button class="btn btn-primary">
+                    <i class="material-icons">storefront</i> Visit Shop
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+<hr />
+
+<div class="container my-5">
+    <h5 class="fw-bold mb-3">Đánh giá (@Model.ListFeedback.Count)</h5>
+
+    @if (Model.ListFeedback.Count > 0)
+    {
+        @foreach (var feedback in Model.ListFeedback)
+        {
+            <div class="card mb-3">
+                <div class="row g-0 align-items-center">
+                    <div class="col-auto">
+                        <img src="@feedback.User.Avatar" alt="Avatar" class="rounded-circle" width="50" />
+                    </div>
+                    <div class="col">
+                        <div class="ms-3">
+                            <strong>@feedback.User.FullName</strong>
+                            <div>
+                                @for (int star = 1; star <= 5; star++)
+                                {
+                                    <span class="@(star <= (int)feedback.Rating ? "text-warning" : "text-muted")">
+                                        &#9733;
+                                    </span>
+                                }
+                            </div>
+                            <p>@feedback.Description</p>
+                            <span class="text-muted">@feedback.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">No feedback available.</p>
+    }
+
+    <hr />
+
+    <h5 class="mt-5">Add Your Feedback</h5>
+    <form method="post">
+        <label>Rating:</label>
+        <div>
+            @for (int star = 1; star <= 5; star++)
+            {
+                <input type="radio" id="star-@star" name="NewFeedback.Rating" value="@star" />
+                <label for="star-@star">&#9733;</label>
+            }
+        </div>
+        <textarea name="NewFeedback.Description" class="form-control mb-3" rows="4" placeholder="Write your feedback..." required></textarea>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

@@ -25,7 +25,7 @@ namespace Blossom_DAOs
 
         public Task<Flower> GetFlower(string id)
         {
-            var flower = _context.Flowers.FirstOrDefault(f => f.Id == id);
+            var flower = _context.Flowers.Include(c => c.FlowerCategory).Include(f => f.Seller).FirstOrDefault(f => f.Id == id);
 
             if (flower == null)
             {

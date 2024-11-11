@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Blossom_BusinessObjects.Entities;
+using Blossom_BusinessObjects;
 
 namespace Blossom_DAOs
 {
@@ -12,6 +13,8 @@ namespace Blossom_DAOs
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -57,6 +60,28 @@ namespace Blossom_DAOs
                     .WithMany()
                     .HasForeignKey(f => f.FlowerCategoryId)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Configure Feedback relationships
+            builder.Entity<Feedback>(entity =>
+            {
+                entity.HasOne(f => f.User)
+                    .WithMany()
+                    .HasForeignKey(f => f.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // Changed to Restrict
+
+                entity.HasOne(f => f.Flower)
+                    .WithMany()
+                    .HasForeignKey(f => f.FlowerId)
+                    .OnDelete(DeleteBehavior.Restrict); // Changed to Restrict
+            });
+
+            builder.Entity<Notification>(entity =>
+            {
+                entity.HasOne(f => f.Receiver)
+                    .WithMany()
+                    .HasForeignKey(f => f.ReceiverId)
+                    .OnDelete(DeleteBehavior.Restrict); // Changed to Restrict
             });
 
             // Configure Order relationships

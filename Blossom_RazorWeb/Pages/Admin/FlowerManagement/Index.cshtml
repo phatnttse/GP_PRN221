@@ -1,4 +1,42 @@
 ﻿@page
 @model Blossom_RazorWeb.Pages.Admin.FlowerManagement.IndexModel
 @{
+    Layout = "_LayoutAdmin";
 }
+<h2>Flowers</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Stock Quantity</th>
+            <th>Address</th>
+            <th>Image</th>
+            <th>Status</th>
+            <th>Category</th>
+            <th>Views</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var flower in Model.Flowers)
+        {
+            <tr>
+                <td>@flower.Name</td>
+                <td>@flower.Description</td>
+                <td>@flower.Price.ToString("C")</td>
+                <td>@flower.StockQuantity</td>
+                <td>@flower.Address</td>
+                <td><img src="@flower.ImageUrl" alt="Flower Image" width="50" /></td>
+                <td>@flower.Status</td>
+                <td>@flower.FlowerCategory?.Name</td>
+                <td>@flower.Views</td>
+                <td>
+                    <a href="/Admin/FlowerManagement/Details?id=@flower.Id" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
