@@ -13,7 +13,7 @@ namespace Blossom_Services
     public class FlowerService : IFlowerService
     {
         private readonly IFlowerRepository _flowerRepository;
-
+        
         public FlowerService(IFlowerRepository flowerRepository)
         {
             _flowerRepository = flowerRepository;
@@ -25,7 +25,6 @@ namespace Blossom_Services
         public Task<bool> UpdateFlower(Flower flower) => _flowerRepository.UpdateFlower(flower);
         public Task<bool> DeleteFlower(string id) => _flowerRepository.DeleteFlower(id);
         public Task<List<Flower>> GetFlowersBySeller(string sellerId) => _flowerRepository.GetFlowersBySeller(sellerId);
-
-
+        public Task<List<Flower>> GetAdminFlowers() => _flowerRepository.GetAdminFlowers();
     }
 }
