@@ -14,6 +14,6 @@ namespace Blossom_Repositories.Interfaces
         public Task<bool> AddFlower(Flower flower);
         public Task<bool> UpdateFlower(Flower flower);
         public Task<bool> DeleteFlower(string id);
-
+        public Task<bool> IncrementViews(string flowerId);
     }
 }

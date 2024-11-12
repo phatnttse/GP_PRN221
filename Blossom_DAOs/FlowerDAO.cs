@@ -49,6 +49,23 @@ namespace Blossom_DAOs
             return Task.FromResult(true);
         }
 
+        public Task<bool> IncrementViews(string flowerId)
+        {
+            var flower = _context.Flowers.FirstOrDefault(f => f.Id == flowerId);
+
+            if (flower == null)
+            {
+                throw new Exception("Flower not found");
+            }
+
+            // Increment the Views count by 1
+            flower.Views += 1;
+
+            _context.Flowers.Update(flower);
+            _context.SaveChanges();
+            return Task.FromResult(true);
+        }
+
         public Task<bool> DeleteFlower(string id)
         {
             var flower = _context.Flowers.FirstOrDefault(f => f.Id == id);

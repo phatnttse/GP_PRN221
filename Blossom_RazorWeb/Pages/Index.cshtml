@@ -216,12 +216,12 @@
             <div class="col">
               <div class="product-item">
                 <figure>
-                  <a href="javascript:;" title="@flower.Name">
+                    <a onclick="location.href='@Url.Page("/Product/Details", new { id = flower.Id })'" title="@flower.Name">
                     <img src="@flower.ImageUrl" alt="@flower.Name" class="tab-image w-100" />
                   </a>
                 </figure>
                 <div class="d-flex flex-column text-center">
-                  <a href="javascript:;" class="product-name">
+                    <a onclick="location.href='@Url.Page("/Product/Details", new { id = flower.Id })'" class="product-name">
                     <h3 class="fs-6 fw-bold">@flower.Name</h3>
                   </a>
                   <div class="product-description">
