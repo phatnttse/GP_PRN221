@@ -80,14 +80,19 @@
                     <h4 class="text-center text-danger mb-4">Total Price: <span>@Model.TotalPrice.ToString("N0")₫</span></h4>
 
                     <!-- Payment Methods -->
+                    <!-- Payment Methods -->
                     <h5 class="fw-bold mb-3 text-center">Payment Methods</h5>
                     <div class="d-flex justify-content-center">
                         <!-- COD Payment Option -->
-                        <button type="button" class="btn btn-lg btn-outline-success shadow-sm">
-                            <i class="bi bi-cash"></i> Pay by COD
-                        </button>
+                        <div>
+                            <input type="radio" id="cod" name="paymentMethod" value="COD" required />
+                            <label for="cod">Pay by COD</label>
+                        </div>
+                        <div class="ms-3">
+                            <input type="radio" id="wallet" name="paymentMethod" value="Wallet" />
+                            <label for="wallet">Pay by Wallet</label>
+                        </div>
                     </div>
-
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-lg btn-primary shadow-sm">
                             <i class="bi bi-cart-check"></i> Create Order

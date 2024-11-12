@@ -1,3 +1,4 @@
+using Blossom_BusinessObjects;
 using Blossom_BusinessObjects.Entities;
 using Blossom_BusinessObjects.Entities.Enums;
 using Blossom_Services.Interfaces;
@@ -5,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Linq;
+using Blossom_BusinessObjects.Enums;
 
 namespace Blossom_RazorWeb.Pages
 {
@@ -15,19 +18,23 @@ namespace Blossom_RazorWeb.Pages
         private readonly IFlowerService _flowerService;
         private readonly ICartItemService _cartItemService;
         private readonly IAccountService _accountService;
+        private readonly IWalletLogService _walletLogService;
 
         public OrderModel(
             ICartItemService cartItemService,
             IAccountService accountService,
             IOrderService orderService,
             IOrderDetailService orderDetailService,
-            IFlowerService flowerService)
+            IFlowerService flowerService,
+            IWalletLogService walletLogService
+        )
         {
             _cartItemService = cartItemService;
             _accountService = accountService;
             _orderService = orderService;
             _orderDetailService = orderDetailService;
             _flowerService = flowerService;
+            _walletLogService = walletLogService;
         }
 
         [BindProperty]
@@ -41,6 +48,7 @@ namespace Blossom_RazorWeb.Pages
         public Flower Flower { get; set; }
         public Account Account { get; set; }
 
+        public WalletLog WalletLog { get; set; }
         public decimal TotalPrice { get; set; }
 
         // GET method to initialize data
@@ -72,9 +80,8 @@ namespace Blossom_RazorWeb.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -93,13 +100,34 @@ namespace Blossom_RazorWeb.Pages
                     return Page();
                 }
 
+                // Get the payment method from the form
+                var paymentMethod = Request.Form["paymentMethod"];
+                if (string.IsNullOrEmpty(paymentMethod))
+                {
+                    ModelState.AddModelError("", "Please select a payment method.");
+                    return Page();
+                }
+
+                // Parse the payment method to the enum
+                if (!Enum.TryParse(paymentMethod, out PaymentMethodEnum selectedPaymentMethod))
+                {
+                    ModelState.AddModelError("", "Invalid payment method selected.");
+                    return Page();
+                }
+
                 // Create a new order
                 Order.UserId = userId;
                 Order.TotalPrice = CartItems.Sum(item => item.Flower.Price * item.Quantity);
                 Order.CreatedAt = DateTime.Now;
                 Order.Status = OrderStatus.PENDING;
 
-                _orderService.AddOrder(Order);
+                // Add the order to the database and ensure the order gets an ID
+                var createdOrder = _orderService.AddOrder(Order);
+                if (createdOrder == null)
+                {
+                    ModelState.AddModelError("", "Failed to create the order. Please try again.");
+                    return Page();
+                }
 
                 // List to store flowers that need stock updates
                 var flowersToUpdate = new List<Flower>();
@@ -108,27 +136,22 @@ namespace Blossom_RazorWeb.Pages
                 {
                     if (cartItem?.Flower != null)
                     {
-                        // Fetch the flower from the database
                         var flower = await _flowerService.GetFlower(cartItem.Flower.Id);
-
                         if (flower == null)
                         {
                             TempData["Error"] = $"Flower with ID {cartItem.Flower.Id} not found.";
                             return Page();
                         }
 
-                        // Check if there's enough stock
                         if (flower.StockQuantity < cartItem.Quantity)
                         {
                             TempData["Error"] = $"Not enough stock for flower '{flower.Name}'.";
                             return Page();
                         }
 
-                        // Deduct the stock quantity
                         flower.StockQuantity -= cartItem.Quantity;
                         flowersToUpdate.Add(flower);
 
-                        // Create order detail
                         var orderDetail = new OrderDetail
                         {
                             OrderId = Order.Id,
@@ -136,27 +159,35 @@ namespace Blossom_RazorWeb.Pages
                             FlowerId = flower.Id,
                             Price = flower.Price,
                             Quantity = cartItem.Quantity,
+                            PaymentMethod = selectedPaymentMethod,
                             Status = OrderDetailStatus.PENDING
                         };
 
-                        _orderDetailService.AddOrderDetail(orderDetail);
+                        // Add the order details
+                        var createdOrderDetail = _orderDetailService.AddOrderDetail(orderDetail);
+                        if (!createdOrderDetail)
+                        {
+                            TempData["Error"] = "Failed to create order details.";
+                            return Page();
+                        }
                     }
                 }
 
-
-                // Update flower stocks after successful transaction
+                // Update flowers stock in the database
                 foreach (var flower in flowersToUpdate)
                 {
                     await _flowerService.UpdateFlower(flower);
                 }
 
-
+                // Optionally, process payment here based on the payment method
+                // For example, if paymentMethod is "Wallet", perform wallet payment processing
 
                 return RedirectToPage("OrderSuccessModel", new { orderId = Order.Id });
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "An error occurred while processing your order. Please try again.";
+                // Log the exception and notify the user
+                TempData["Error"] = ex.Message;
                 return Page();
             }
         }
