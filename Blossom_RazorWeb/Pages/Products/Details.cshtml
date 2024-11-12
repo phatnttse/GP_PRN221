@@ -1,0 +1,149 @@
+﻿@page "{id}"
+@model Blossom_RazorWeb.Pages.Products.DetailsModel
+@{
+    ViewData["Title"] = "Flower Details";
+    Layout = "_Layout";
+    var flower = Model.Flower;
+    var sellerInfo = Model.SellerInfo;
+}
+
+<div class="container my-5">
+    <div class="row gx-5">
+        <!-- Flower Image Section -->
+        <aside class="col-lg-6">
+            <div class="border rounded-4 mb-3 d-flex justify-content-center">
+                <a class="rounded-4" target="_blank">
+                    <img style="max-width: 100%; max-height: 100vh;" 
+                         src="@flower.ImageUrl" 
+                         alt="@flower?.Name" />
+                </a>
+            </div>
+        </aside>
+
+        <!-- Flower Details Section -->
+        <main class="col-lg-6">
+            <div class="ps-lg-3">
+                <h4 class="title primary-color">@flower?.Name</h4>
+                <div class="d-flex flex-row my-3">
+                    <div class="text-black mb-1 me-3">
+                        <span>Lượt xem: @flower?.Views</span>
+                    </div>
+                    <span class="text-black me-3">
+                        <i class="fas fa-shopping-basket me-2"></i> 
+                        @flower?.StockQuantity items available
+                    </span>
+                    <span class="@((flower?.StockQuantity > 0) ? "text-success" : "text-danger") me-3 fw-bold">
+                        @(flower?.StockQuantity > 0 ? "In Stock" : "Out of Stock")
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <span class="h5 fw-bold text-danger">@String.Format("{0:0,0}₫", flower?.Price)</span>
+                </div>
+
+                <p class="text-black">@flower?.Description</p>
+
+                <div class="row mb-4">
+                    <h6 class="mb-2 d-block text-secondary">Quantity</h6>
+                    <div class="input-group mb-4" style="width: 170px">
+                        <button class="btn btn-white border" type="button" onclick="decreaseQuantity()">-</button>
+                        <input type="text" class="form-control text-center border" readonly value="@Model.Quantity" />
+                        <button class="btn btn-white border" type="button" onclick="increaseQuantity()">+</button>
+                    </div>
+                    <button class="btn btn-primary" onclick="buyNow(@flower?.Id)">Buy Now</button>
+                    <button class="btn btn-secondary" onclick="addToCart(@flower?.Id)">Add to Cart</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+
+<!-- Seller Info -->
+<section class="py-3">
+    <div class="container">
+        <div class="shop-info row align-items-center">
+            <!-- Seller Avatar -->
+            <div class="col-md-3 text-center">
+                <img class="rounded-circle" src="@flower.Seller.Avatar" alt="@flower.Seller.FullName" width="100" height="100" />
+            </div>
+
+            <!-- Seller Name and Rating -->
+            <div class="col-md-3 text-center">
+                <h5 class="shop-name">@flower.Seller.FullName</h5>
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="material-icons fw-bold" style="color: #f6db30">star</i>
+                    <span class="ms-1">
+                        Đánh giá: <strong>@Model.SellerRatingAverage</strong> (@Model.SellerRatingCount Đánh giá)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Product Count -->
+            <div class="col-md-3 text-center">
+                <h6 class="text-muted">Đã bán @Model.SellerProductCount sản phẩm</h6>
+            </div>
+
+            <!-- Visit Shop Button -->
+            <div class="col-md-3 text-center">
+                <button class="btn btn-primary">
+                    <i class="material-icons">storefront</i> Visit Shop
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+<hr />
+
+<div class="container my-5">
+    <h5 class="fw-bold mb-3">Đánh giá (@Model.ListFeedback.Count)</h5>
+
+    @if (Model.ListFeedback.Count > 0)
+    {
+        @foreach (var feedback in Model.ListFeedback)
+        {
+            <div class="card mb-3">
+                <div class="row g-0 align-items-center">
+                    <div class="col-auto">
+                        <img src="@feedback.User.Avatar" alt="Avatar" class="rounded-circle" width="50" />
+                    </div>
+                    <div class="col">
+                        <div class="ms-3">
+                            <strong>@feedback.User.FullName</strong>
+                            <div>
+                                @for (int star = 1; star <= 5; star++)
+                                {
+                                    <span class="@(star <= (int)feedback.Rating ? "text-warning" : "text-muted")">
+                                        &#9733;
+                                    </span>
+                                }
+                            </div>
+                            <p>@feedback.Description</p>
+                            <span class="text-muted">@feedback.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">No feedback available.</p>
+    }
+
+    <hr />
+
+    <h5 class="mt-5">Add Your Feedback</h5>
+    <form method="post">
+        <label>Rating:</label>
+        <div>
+            @for (int star = 1; star <= 5; star++)
+            {
+                <input type="radio" id="star-@star" name="NewFeedback.Rating" value="@star" />
+                <label for="star-@star">&#9733;</label>
+            }
+        </div>
+        <textarea name="NewFeedback.Description" class="form-control mb-3" rows="4" placeholder="Write your feedback..." required></textarea>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

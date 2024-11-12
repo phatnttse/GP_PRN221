@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 
 namespace Blossom_DAOs
 {
-    public class FlowerDAO
+    public class FlowerCategoryDAO
     {
         private readonly ApplicationDbContext _context;
 
-        public FlowerDAO(ApplicationDbContext context)
+        public FlowerCategoryDAO(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public Task<List<Flower>> GetFlowers()
+        public Task<List<FlowerCategory>> GetFlowerCategories()
         {
-            var flowers = _context.Flowers.Include(c => c.FlowerCategory).ToList();
+            var flowers = _context.FlowerCategories.ToList();
             return Task.FromResult(flowers);
         }
 
-        public Task<Flower> GetFlower(string id)
+        public Task<FlowerCategory> GetFlowerCategory(string id)
         {
-            var flower = _context.Flowers.Include(c => c.FlowerCategory).Include(f => f.Seller).FirstOrDefault(f => f.Id == id);
+            var flower = _context.FlowerCategories.FirstOrDefault(f => f.Id == id);
 
             if (flower == null)
             {
@@ -35,32 +35,30 @@ namespace Blossom_DAOs
             return Task.FromResult(flower);
         }
 
-        public Task<bool> AddFlower(Flower flower)
+        public Task<bool> AddFlowerCategory(FlowerCategory flower)
         {
-            _context.Flowers.Add(flower);
+            _context.FlowerCategories.Add(flower);
             _context.SaveChanges();
             return Task.FromResult(true);
         }
 
-        public Task<bool> UpdateFlower(Flower flower)
+        public Task<bool> UpdateFlowerCategory(FlowerCategory flower)
         {
-            _context.Flowers.Update(flower);
+            _context.FlowerCategories.Update(flower);
             _context.SaveChanges();
             return Task.FromResult(true);
         }
 
         public Task<bool> DeleteFlower(string id)
         {
-            var flower = _context.Flowers.FirstOrDefault(f => f.Id == id);
+            var flower = _context.FlowerCategories.FirstOrDefault(f => f.Id == id);
             if (flower == null)
             {
                 throw new Exception("Flower not found");
             }
-            _context.Flowers.Remove(flower);
+            _context.FlowerCategories.Remove(flower);
             _context.SaveChanges();
             return Task.FromResult(true);
         }
-
-
     }
 }

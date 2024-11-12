@@ -19,4 +19,8 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\Admin\OrderManagement\" />
+  </ItemGroup>
+
 </Project>

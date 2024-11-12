@@ -1,0 +1,41 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.Admin.FlowerManagement.DetailsModel
+@{
+    Layout = "_LayoutAdmin";
+}
+
+<h2>Flower Details</h2>
+
+<div class="card">
+    <img src="@Model.Flower.ImageUrl" alt="Flower Image" class="card-img-top" style="width:250px; height:250px" />
+    <div class="card-body">
+        <h5 class="card-title">@Model.Flower.Name</h5>
+        <p class="card-text">@Model.Flower.Description</p>
+        <p><strong>Price:</strong> @Model.Flower.Price.ToString("C")</p>
+        <p><strong>Stock Quantity:</strong> @Model.Flower.StockQuantity</p>
+        <p><strong>Address:</strong> @Model.Flower.Address</p>
+        <p><strong>Status:</strong> @Model.Flower.Status</p>
+        <p><strong>Category:</strong> @Model.Flower.FlowerCategory?.Name</p>
+        <p><strong>Views:</strong> @Model.Flower.Views</p>
+
+        @if (Model.Flower.Status == Blossom_BusinessObjects.Entities.Enums.FlowerStatus.PENDING)
+        {
+            <form method="post" asp-page-handler="Approve">
+                <input hidden asp-for="FlowerId" value="@Model.Flower.Id" />
+                <button type="submit" class="btn btn-success">Approve</button>
+            </form>
+            <form method="post" asp-page-handler="Reject" class="mt-5">
+                <input hidden asp-for="FlowerId" value="@Model.Flower.Id" />
+                <label for="RejectReason">Reason for Rejection:</label>
+                <input type="text" name="RejectReason" id="RejectReason" class="form-control" />
+                <button type="submit" class="btn btn-danger mt-2">Reject</button>
+            </form>
+        }
+        else
+        {
+            <p><strong>Reject Reason:</strong> @Model.Flower.RejectReason</p>
+        }
+    </div>
+</div>
+
+<a href="/Admin/FlowerManagement/Index" class="btn btn-secondary mt-3">Back to List</a>

@@ -1,0 +1,88 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.OrderModel
+@{
+    ViewData["Title"] = "Create New Order";
+}
+
+<form method="post">
+    <div class="container-fluid" style="margin-top:100px">
+        <div class="row">
+            <!-- Left Column: Buyer Information -->
+            <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+                <div class="card p-4">
+                    <h5 class="my-4 fw-bold">Buyer Information</h5>
+                    <div class="mb-3">
+                        <label for="buyerName" class="form-label">Buyer Name</label>
+                        <input asp-for="Order.BuyerName" class="form-control" id="buyerName" required />
+                        <span asp-validation-for="Order.BuyerName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="buyerPhone" class="form-label">Phone</label>
+                        <input asp-for="Order.BuyerPhone" class="form-control" id="buyerPhone" required />
+                        <span asp-validation-for="Order.BuyerPhone" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="buyerEmail" class="form-label">Email</label>
+                        <input asp-for="Order.BuyerEmail" class="form-control" id="buyerEmail" required />
+                        <span asp-validation-for="Order.BuyerEmail" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="buyerAddress" class="form-label">Address</label>
+                        <input asp-for="Order.BuyerAddress" class="form-control" id="buyerAddress" required />
+                        <span asp-validation-for="Order.BuyerAddress" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="note" class="form-label">Note</label>
+                        <textarea asp-for="Order.Note" class="form-control" id="note" required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Order Summary & Payment -->
+            <div class="col-12 col-lg-6">
+                <div class="card p-4 ">
+                    <h5 class="my-4 fw-bold text-center">Order Summary</h5>
+                    <div id="orderDetails">
+                        @if (Model.CartItems != null && Model.CartItems.Any())
+                        {
+                            foreach (var item in Model.CartItems)
+                            {
+                                <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                                    <img src="@item.Flower.ImageUrl" class="rounded-circle" style="height: 80px; width: 80px; object-fit: cover;" alt="@item.Flower.Name">
+                                    <div class="ms-3">
+                                        <h6 class="mb-1 text-truncate" style="max-width: 200px;">@item.Flower.Name</h6>
+                                        <p class="text-muted mb-2">Price: <strong>@item.Flower.Price.ToString("N0")₫</strong></p>
+                                        <p class="text-muted mb-0">Quantity: <strong>@item.Quantity</strong></p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p>No items in the cart.</p>
+                        }
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <h4 class="text-center text-danger mb-4">Total Price: <span>@Model.TotalPrice.ToString("N0")₫</span></h4>
+
+                    <!-- Payment Methods -->
+                    <h5 class="fw-bold mb-3 text-center">Payment Methods</h5>
+                    <div class="d-flex justify-content-center">
+                        <!-- COD Payment Option -->
+                        <button type="button" class="btn btn-lg btn-outline-success shadow-sm">
+                            <i class="bi bi-cash"></i> Pay by COD
+                        </button>
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-lg btn-primary shadow-sm">
+                            <i class="bi bi-cart-check"></i> Create Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
