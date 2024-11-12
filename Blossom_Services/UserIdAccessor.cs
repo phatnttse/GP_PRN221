@@ -20,7 +20,8 @@ namespace Blossom_Services
 
         public string? GetCurrentUserId()
         {
-            return _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = _httpContextAccessor.HttpContext?.Session.GetString("UserId");
+            return userId;
         }
     }
 }

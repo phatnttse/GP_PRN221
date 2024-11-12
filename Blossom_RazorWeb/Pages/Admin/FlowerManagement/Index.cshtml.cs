@@ -21,7 +21,7 @@ namespace Blossom_RazorWeb.Pages.Admin.FlowerManagement
 
         public async Task OnGetAsync()
         {
-            Flowers = await flowerService.GetFlowers();
+            Flowers = await flowerService.GetAdminFlowers();
         }
     }
 }

@@ -18,5 +18,7 @@ namespace Blossom_Repositories.Interfaces
         bool UpdateOrder(Order order);
 
         bool DeleteOrder(string id);
+
+        List<Order> GetAllOrdersById(string username);
     }
 }
