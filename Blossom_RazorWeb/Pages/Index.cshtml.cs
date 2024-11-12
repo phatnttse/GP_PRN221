@@ -26,6 +26,8 @@ IUserIdAssessor userIdAccessor)
         }
 
         public List<Flower> Flowers { get; set; }
+        public string Message { get; set; }
+
 
         public async void OnGet()
         {
@@ -38,13 +40,23 @@ IUserIdAssessor userIdAccessor)
             {
                 var currentUser = _userIdAccessor.GetCurrentUserId();
                 // Giả sử bạn có phương thức AddFlowerListingToCart trong service
-                await _cartItemService.AddFlowerListingToCart(currentUser, flowerId, 1);
+                if (currentUser != null)
+                {
+                    await _cartItemService.AddFlowerListingToCart(currentUser, flowerId, 1);
 
-                // Reload danh sách hoa sau khi thêm vào giỏ hàng
-                Flowers = await _flowerService.GetFlowers();
+                    // Reload danh sách hoa sau khi thêm vào giỏ hàng
+                    Flowers = await _flowerService.GetFlowers();
+                    // Có thể bạn cần điều hướng người dùng đến giỏ hàng hoặc trang khác
+                    TempData["Message"] = "Hoa đã được thêm vào giỏ hàng!";
+                    return RedirectToPage("/CartItem");
+                }
+                else
+                {
+                    TempData["LoginFailMessage"] = "Vui lòng đăng nhập!";
+                    return RedirectToPage("/Index");
+                }
 
-                // Có thể bạn cần điều hướng người dùng đến giỏ hàng hoặc trang khác
-                return RedirectToPage("/CartItem");
+
             }
             catch (Exception ex)
             {

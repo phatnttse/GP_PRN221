@@ -1,4 +1,93 @@
 ﻿@page
 @model Blossom_RazorWeb.Pages.SellerChannel.FlowerManagement.EditModel
 @{
+    Layout = "_LayoutSellerChannel";
 }
+
+<h2>Chỉnh sửa sản phẩm</h2>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var errorMessage = '@Model.ErrorMessage';
+
+        if (errorMessage) {
+            toastr.error(errorMessage);
+        }
+    });
+</script>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <div class="form-group col-md-6">
+            <img width="100" class="rounded" src="@Model.Flower.ImageUrl" alt="Alternate Text" />
+            <input type="hidden" asp-for="Flower.ImageUrl" />
+            <input type="hidden" asp-for="Flower.Id" />
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="UploadImage">Tải ảnh sản phẩm</label>
+            <input asp-for="UploadImage" type="file" class="form-control-file" accept="image/*">
+            <span asp-validation-for="UploadImage" class="text-danger"></span>
+
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="Flower.Name">Tên sản phẩm</label>
+            <input asp-for="Flower.Name" class="form-control" placeholder="Tên sản phẩm">
+            <span asp-validation-for="Flower.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Flower.FlowerCategoryId">Danh mục</label>
+            <select asp-for="Flower.FlowerCategoryId" class="form-control">
+                <option value="" selected>Chọn danh mục...</option>
+                @foreach (var category in Model.FlowerCategories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                })
+            </select>
+            <span asp-validation-for="Flower.FlowerCategoryId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Flower.Address">Địa chỉ</label>
+        <input asp-for="Flower.Address" class="form-control" placeholder="Địa chỉ">
+        <span asp-validation-for="Flower.Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="Flower.Price">Giá sản phẩm (VNĐ)</label>
+            <input asp-for="Flower.Price" class="form-control">
+            <span asp-validation-for="Flower.Price" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Flower.StockQuantity">Số lượng</label>
+            <input asp-for="Flower.StockQuantity" class="form-control">
+            <span asp-validation-for="Flower.StockQuantity" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="Flower.FlowerExpireDate">Ngày hết hạn</label>
+            <input asp-for="Flower.FlowerExpireDate" type="datetime-local" class="form-control">
+            <span asp-validation-for="Flower.FlowerExpireDate" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Flower.ExpireDate">Ngày ngưng bán</label>
+            <input asp-for="Flower.ExpireDate" type="datetime-local" class="form-control">
+            <span asp-validation-for="Flower.ExpireDate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Flower.Description">Mô tả</label>
+        <textarea asp-for="Flower.Description" class="form-control" rows="5" placeholder="Nhập mô tả chi tiết..."></textarea>
+        <span asp-validation-for="Flower.Description" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+</form>
+

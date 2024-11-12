@@ -39,6 +39,18 @@ namespace Blossom_DAOs
             return account;
         }
 
+        public async Task<Account> GetAccountById(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentException("ID không được để trống", nameof(id));
+            }
+
+            var account = await _userManager.FindByIdAsync(id);
+
+            return account;
+        }
+
         public async Task<bool> Login(string email, string password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
@@ -78,9 +90,13 @@ namespace Blossom_DAOs
                 UserName = email,
                 Email = email,
                 Gender = gender,
+<<<<<<< HEAD
                 Address = "",
                 Avatar = "assets/images/avatar.svg",
                 Balance = 0,
+=======
+                Avatar = "/assets/images/avatar.svg",
+>>>>>>> 847816db323f7efd78e6e152871bd9bde70060ca
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
             };
