@@ -1,0 +1,85 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.Wallet.IndexModel
+@using Blossom_BusinessObjects.Enums;
+@{
+}
+<section class="container section-wallet" style="padding-top: 5rem">
+    <div class="wallet rounded shadow-sm">
+        <div class="wallet-header text-white">
+            <div class="row p-5">
+                <div class="col-lg-4 col-md-12">
+                    <h5 class="text-white mb-3 text-center">
+                        Số dư
+                    </h5>
+                    <h2 class="text-white text-center">
+                        @Model.accountBalance.ToString("N0")₫
+                    </h2>
+                </div>
+                <div class="col-lg-4 col-md-6 text-center">
+                    <div class="d-flex flex-column align-items-center">
+                        <img asp-page="AddBalance"
+                             width="50"
+                             style="color: white; cursor: pointer"
+                             src="/assets/images/wallet-plus.svg"
+                             alt="Wallet Plus" />
+                        <a asp-page="AddBalance" class="text-white fw-bold">
+                            Nạp tiền
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex justify-content-center">
+                        <img width="50"
+                             src="/assets/images/wallet-payment-svg.svg"
+                             alt="User Profile"
+                             class="rounded-circle" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content p-4">
+            <div class="transactions">
+                <h6 class="t-desc">Giao dịch gần đây</h6>
+                @foreach (var log in Model.WalletLogs)
+                {
+                    var statusClass = log.Status switch
+                    {
+                        WalletLogStatusEnum.PENDING => "text-warning",
+                        WalletLogStatusEnum.FAILED => "text-danger",
+                        WalletLogStatusEnum.SUCCESS => "text-success",
+                        WalletLogStatusEnum.EXPIRED => "text-muted",
+                        _ => "text-dark"
+                    };
+
+                    var amountText = log.Type switch
+                    {
+                        WalletLogTypeEnum.ADD or WalletLogTypeEnum.DEPOSIT => "+" + log.Amount.ToString("N0") + "₫",
+                        WalletLogTypeEnum.SUBTRACT or WalletLogTypeEnum.WITHDRAW => "-" + log.Amount.ToString("N0") + "₫",
+                        _ => log.Amount.ToString("N0") + "₫" 
+                    };
+                    <div class="transaction d-flex justify-content-between align-items-center p-3 mb-2 bg-light rounded shadow-sm">
+                        <div class="t-details flex-grow-1 ms-3">
+                            <div class="d-flex align-items-center">
+                                <div class="t-title text-black me-3">
+                                    @log.Type
+                                </div>
+                            </div>
+                            <div class="t-time text-black">
+                                @log.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="t-amount fw-bold @statusClass">
+                                @amountText
+                            </div>
+                            <div class="t-current-balance text-black fw-bold">
+                                SD: @log.Balance₫
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

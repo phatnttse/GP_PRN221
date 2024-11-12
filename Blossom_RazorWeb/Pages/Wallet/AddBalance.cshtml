@@ -1,0 +1,28 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.Wallet.AddBalanceModel
+@{
+    ViewData["Title"] = "Nạp tiền vào ví";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var errorMessage = '@Model.ErrorMessage';
+
+        if (errorMessage) {
+            toastr.error(errorMessage);
+        }
+    });
+</script>
+
+<div class="container" style="padding: 4rem 0rem">
+    <h3 class="text-center my-3">Nạp tiền vào ví</h3>
+    <form method="post">
+        <div class="mb-3">
+            <input type="number" min="0" class="form-control" id="amount" asp-for="Amount" placeholder="Nhập số tiền (VNĐ)" required>
+            <span asp-validation-for="Amount" class="text-danger"></span>
+
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg px-5">Thanh toán</button>
+        </div>
+    </form>
+</div>
