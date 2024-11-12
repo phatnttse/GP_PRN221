@@ -1,6 +1,19 @@
 ﻿@page
+@using Blossom_BusinessObjects.Entities.Enums
 @model Blossom_RazorWeb.Pages.OrderHistory.OrderHistoryModel
 @{
+}
+@if (TempData["Error"] != null)
+{
+    <script type="text/javascript">
+        toastr.warning('@TempData["Error"]');
+    </script>
+}
+@if (TempData["Success"] != null)
+{
+    <script type="text/javascript">
+        toastr.success('@TempData["Success"]');
+    </script>
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -36,11 +49,6 @@
 <body>
     <section class="container section-order-history">
         <div class="order-history">
-            <!-- Tab -->
-            <div class="tabs">
-                <div class="tab">Đơn hàng (1)</div>
-                <div class="tab">Đơn hàng khác (0)</div>
-            </div>
 
             <!-- Order Card -->
             <article class="card mt-5">
@@ -58,11 +66,11 @@
                                     <span class="fw-bold text-black">Thông tin sản phẩm</span>
                                     <figure class="itemside mb-3">
                                         <div class="aside">
-                                            <img src="product_image_url.jpg" class="img-sm border" />
+                                            <img src="@item.Flower.ImageUrl" class="img-sm border" />
                                         </div>
                                         <figcaption class="info align-self-center">
                                             <p class="title">@item.Flower.Name <br />x @item.Quantity</p>
-                                            <span class="text-black">300,000₫</span>
+                                            <span class="text-black">@item.Price</span>
                                         </figcaption>
                                     </figure>
                                 </div>
@@ -80,7 +88,7 @@
                                 </div>
                                 <div class="col">
                                     <strong class="fw-bold text-black">Thanh toán</strong> <br />
-                                    <span class="text-black">COD</span>
+                                    <span class="text-black">@item.PaymentMethod</span>
                                 </div>
                                 <div class="col">
                                     <strong class="fw-bold text-black">Ngày đặt hàng</strong> <br />
@@ -92,23 +100,67 @@
                         <!-- Tracking Steps -->
                         <div class="track text-black">
                             <div class="step active">
-                                <span class="icon"> <i class="fa fa-check"></i> </span>
-                                <span class="text">Đã giao</span>
-                            </div>
-                            <div class="step">
-                                <span class="icon"> <i class="fa fa-clock"></i> </span>
-                                <span class="text">Đang giao</span>
+                                @if (item.Status == OrderDetailStatus.PENDING)
+                                {
+                                    <span class="icon"> <i class="fa fa-check"></i> </span>
+                                    <span class="text">ĐANG CHUẨN BỊ HÀNG</span>
+                                }
+                                @if (item.Status == OrderDetailStatus.SHIPPED)
+                                {
+                                    <span class="icon"> <i class="fa fa-check"></i> </span>
+                                    <span class="text">ĐANG VẬN CHUYỂN TỚI BẠN</span>
+                                }
+                                @if (item.Status == OrderDetailStatus.CANCELED)
+                                {
+                                    <span class="icon"> <i class="fa fa-times-circle"></i> </span>
+                                    <span class="text">ĐÃ HỦY</span>
+                                }
                             </div>
                         </div>
-
-                        <!-- Buttons -->
-                        <div class="d-flex justify-content-center align-items-center">
-                            <button class="btn btn-danger mt-4">Huỷ đơn hàng</button>
-                            <button class="btn btn-success mt-4">Xác nhận đã nhận hàng</button>
-                        </div>
+                        @if (item.Status == OrderDetailStatus.PENDING)
+                        {
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div style="padding:10px">
+                                    <form method="post" asp-page-handler="CancelOrder">
+                                        <input type="hidden" name="orderDetailId" value="@item.Id" />
+                                        <button type="submit" class="btn btn-danger">Huỷ đơn hàng</button>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        }
+                        @if (item.Status == OrderDetailStatus.SHIPPED)
+                        {
+                            <div style="padding:10px">
+                                <form method="post" asp-page-handler="DeliveredOrder">
+                                    <input type="hidden" name="DeliveredOrder" value="@item.Id" />
+                                    <button type="submit" class="btn btn-success">Xác nhận đã nhận hàng</button>
+                                </form>
+                            </div>
+                        }
                     </div>
                 }
             </article>
+            
+        </div>
+        <div style="margin-top: 10px">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                        <a class="page-link" href="?PageIndex=@(Model.PageIndex - 1)">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                            <a class="page-link" href="?PageIndex=@i">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="?PageIndex=@(Model.PageIndex + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </section>
 

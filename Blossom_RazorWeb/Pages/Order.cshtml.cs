@@ -174,9 +174,25 @@ namespace Blossom_RazorWeb.Pages
                             PaymentMethod = selectedPaymentMethod,
                             Status = OrderDetailStatus.PENDING
                         };
+                        Account seller = await _accountService.GetAccountById(flower.SellerId);
+                        Account user = await _accountService.GetAccountById(userId);
+                        // calculator amount
+                        decimal feeService = 5 / 100;
+                        decimal calAmountForUser = flower.Price * cartItem.Quantity;
+                        decimal calAmoutnForSeller = calAmountForUser * feeService;
+
+
+                        //handle balance for user 
+
+                        //handle balance for seller
 
                         // Add the order details
                         var createdOrderDetail = _orderDetailService.AddOrderDetail(orderDetail);
+                        var buyerLog = CreateWalletLog(userId, calAmountForUser, WalletLogTypeEnum.SUBTRACT, WalletLogActorEnum.BUYER, user.Balance);
+                        var sellerLog = CreateWalletLog(flower.SellerId, calAmoutnForSeller, WalletLogTypeEnum.ADD, WalletLogActorEnum.SELLER, seller.Balance);
+                        _walletLogService.Create(buyerLog);
+                        _walletLogService.Create(sellerLog);
+
                         if (!createdOrderDetail)
                         {
                             TempData["Error"] = "Failed to create order details.";
@@ -191,9 +207,6 @@ namespace Blossom_RazorWeb.Pages
                     await _flowerService.UpdateFlower(flower);
                 }
 
-                // Optionally, process payment here based on the payment method
-                // For example, if paymentMethod is "Wallet", perform wallet payment processing
-
                 return RedirectToPage("OrderSuccessModel", new { orderId = Order.Id });
             }
             catch (Exception ex)
@@ -203,5 +216,17 @@ namespace Blossom_RazorWeb.Pages
                 return Page();
             }
         }
+        private WalletLog CreateWalletLog(string userId, decimal amount, WalletLogTypeEnum type, WalletLogActorEnum actor, decimal currentBalance) => new WalletLog
+        {
+            UserId = userId,
+            Amount = amount,
+            Type = type,
+            Status = WalletLogStatusEnum.SUCCESS,
+            ActorEnum = actor,
+            IsRefund = false,
+            Balance = currentBalance,
+            PaymentMethod = PaymentMethodEnum.WALLET,
+            CreatedAt = DateTime.Now
+        };
     }
 }
