@@ -40,5 +40,7 @@ namespace Blossom_Repositories
         {
             return _orderDetailDAO.DeleteOrderDetail(id).Result;
         }
+
+        public List<OrderDetail> GetOrderDetailsById(string username) => _orderDetailDAO.GetOrderDetailsByUserName(username).Result;
     }
 }

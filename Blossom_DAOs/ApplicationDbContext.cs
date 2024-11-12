@@ -15,7 +15,7 @@ namespace Blossom_DAOs
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-
+        public DbSet<WalletLog> WalletLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -61,7 +61,13 @@ namespace Blossom_DAOs
                     .HasForeignKey(f => f.FlowerCategoryId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
-
+            builder.Entity<WalletLog>(entity =>
+            {
+                entity.HasOne(f => f.User)
+                    .WithMany()
+                    .HasForeignKey(f => f.UserId)
+                    .OnDelete(DeleteBehavior.Restrict); // Changed to Restrict
+            });
             // Configure Feedback relationships
             builder.Entity<Feedback>(entity =>
             {
@@ -131,6 +137,7 @@ namespace Blossom_DAOs
                     .OnDelete(DeleteBehavior.Restrict);
                 
             });
+
         }
 
         public override int SaveChanges()

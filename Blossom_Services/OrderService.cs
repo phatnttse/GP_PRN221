@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 
 namespace Blossom_Services
 {
-    public class OrderService: IOrderService
+    public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IUserIdAssessor _userIdAssessor;
 
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository, IUserIdAssessor userIdAssessor)
         {
             _orderRepository = orderRepository;
+            _userIdAssessor = userIdAssessor;
         }
 
         public List<Order> GetAllOrders()
@@ -52,6 +54,17 @@ namespace Blossom_Services
         public bool DeleteOrder(string id)
         {
             return _orderRepository.DeleteOrder(id);
+        }
+
+        public List<Order> GetOrdersById(string user)
+        {
+            var existingUser = _userIdAssessor.GetCurrentUserId();
+            if (existingUser != null)
+            {
+                var orders = _orderRepository.GetAllOrdersById(existingUser);
+                return orders?.ToList() ?? new List<Order>();  
+            }
+            return new List<Order>(); 
         }
     }
 }
