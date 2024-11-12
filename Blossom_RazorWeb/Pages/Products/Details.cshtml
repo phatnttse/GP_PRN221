@@ -1,10 +1,12 @@
 ﻿@page "{id}"
+@using Blossom_BusinessObjects.Entities.Enums
 @model Blossom_RazorWeb.Pages.Products.DetailsModel
 @{
     ViewData["Title"] = "Flower Details";
     Layout = "_Layout";
     var flower = Model.Flower;
     var sellerInfo = Model.SellerInfo;
+    var alertThresholdDays = 3;
 }
 
 <div class="container my-5">
@@ -40,6 +42,22 @@
                 <div class="mb-3">
                     <span class="h5 fw-bold text-danger">@String.Format("{0:0,0}₫", flower?.Price)</span>
                 </div>
+
+                @if (!flower.Status.Equals(FlowerStatus.APPROVED))
+                {
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        This flower is currently @flower.Status.ToString();
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (flower.FlowerExpireDate.HasValue && flower.FlowerExpireDate.Value <= DateTime.UtcNow.AddDays(alertThresholdDays))
+                {
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        This flower is expire soon, pls buy ASAP
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
 
                 <p class="text-black">@flower?.Description</p>
 
