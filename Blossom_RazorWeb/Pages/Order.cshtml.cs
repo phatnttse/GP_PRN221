@@ -16,57 +16,47 @@ namespace Blossom_RazorWeb.Pages
         private readonly ICartItemService _cartItemService;
         private readonly IAccountService _accountService;
 
+        public OrderModel(
+            ICartItemService cartItemService,
+            IAccountService accountService,
+            IOrderService orderService,
+            IOrderDetailService orderDetailService,
+            IFlowerService flowerService)
+        {
+            _cartItemService = cartItemService;
+            _accountService = accountService;
+            _orderService = orderService;
+            _orderDetailService = orderDetailService;
+            _flowerService = flowerService;
+        }
+
         [BindProperty]
         public Order Order { get; set; } = new Order();
 
         [BindProperty]
         public List<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-        public IEnumerable<CartItem> CartItems { get; set; }
-        public List<Flower> Flowers { get; set; }
+        public List<CartItem> CartItems { get; set; } = new List<CartItem>();
+        public List<Flower> Flowers { get; set; } = new List<Flower>();
         public Account Account { get; set; }
 
         public decimal TotalPrice { get; set; }
 
-        public OrderModel(IOrderService orderService, IOrderDetailService orderDetailService, IFlowerService flowerService)
-        {
-            _orderService = orderService;
-            _orderDetailService = orderDetailService;
-            _flowerService = flowerService;
-        }
-
+        // GET method to initialize data
         public async Task OnGetAsync()
         {
-            // Initialize CartItems
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            var account = await _accountService.GetAccount(userEmail);
-            CartItems = account != null
-                ? await _cartItemService.GetAllByUserAsync(account)
-                : new List<CartItem>();
-            CartItems = new List<CartItem>
-            {
-                new CartItem
-                {
-                    FlowerId = "sdfsdafasfd",
-                    Flower = _flowerService.GetFlower("sdfsdafasfd").Result,
-                    Quantity = 2
-                },
-                new CartItem
-                {
-                    FlowerId = "sdfsdafasfda",
-                    Flower = _flowerService.GetFlower("sdfsdafasfda").Result,
-                    Quantity = 1
-                }
-            };
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (CartItems == null)
+            if (!string.IsNullOrEmpty(userId))
             {
-                CartItems = new List<CartItem>();
+                CartItems = (await _cartItemService.GetAllCartItemUserIdAsync(userId)).ToList();
             }
 
-            Flowers = _flowerService.GetFlowers().Result;
+            Flowers = await _flowerService.GetFlowers();
             TotalPrice = 0;
 
+            // Calculate total price
             foreach (var detail in CartItems)
             {
                 if (detail?.Flower != null)
