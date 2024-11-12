@@ -13,6 +13,8 @@ namespace Blossom_RazorWeb.Pages
         private readonly IOrderService _orderService;
         private readonly IOrderDetailService _orderDetailService;
         private readonly IFlowerService _flowerService;
+        private readonly ICartItemService _cartItemService;
+        private readonly IAccountService _accountService;
 
         [BindProperty]
         public Order Order { get; set; } = new Order();
@@ -20,7 +22,7 @@ namespace Blossom_RazorWeb.Pages
         [BindProperty]
         public List<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-        public List<CartItem> CartItems { get; set; }
+        public IEnumerable<CartItem> CartItems { get; set; }
         public List<Flower> Flowers { get; set; }
         public Account Account { get; set; }
 
@@ -33,9 +35,14 @@ namespace Blossom_RazorWeb.Pages
             _flowerService = flowerService;
         }
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
             // Initialize CartItems
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            var account = await _accountService.GetAccount(userEmail);
+            CartItems = account != null
+                ? await _cartItemService.GetAllByUserAsync(account)
+                : new List<CartItem>();
             CartItems = new List<CartItem>
             {
                 new CartItem
@@ -56,10 +63,6 @@ namespace Blossom_RazorWeb.Pages
             {
                 CartItems = new List<CartItem>();
             }
-
-            if (CartItems.Count == 0)
-            {
-            }   
 
             Flowers = _flowerService.GetFlowers().Result;
             TotalPrice = 0;
