@@ -23,6 +23,11 @@ namespace Blossom_DAOs
             var flowers = _context.Flowers.Include(c => c.FlowerCategory).Where(f => !f.IsDeleted && f.Status == FlowerStatus.APPROVED).ToList();
             return Task.FromResult(flowers);
         }
+        public Task<List<Flower>> GetAdminFlowers()
+        {
+            var flowers = _context.Flowers.Include(c => c.FlowerCategory).ToList();
+            return Task.FromResult(flowers);
+        }
 
         public Task<Flower> GetFlower(string id)
         {
