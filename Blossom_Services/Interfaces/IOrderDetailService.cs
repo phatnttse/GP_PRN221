@@ -14,5 +14,6 @@ namespace Blossom_Services.Interfaces
         bool AddOrderDetail(OrderDetail orderDetail);
         bool UpdateOrderDetail(OrderDetail orderDetail);
         bool DeleteOrderDetail(string id);
+        List<OrderDetail> GetOrderDetailsById(string username);
     }
 }

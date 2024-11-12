@@ -44,67 +44,70 @@
 
             <!-- Order Card -->
             <article class="card mt-5">
-                <div class="card-body">
-                    <h6 class="mb-4">
-                        <span class="fw-bold text-black">Mã đơn hàng:</span>
-                        <span class="primary-color"> #123456</span>
-                    </h6>
+                @foreach(var item in Model.OrderDetails)
+                {
+                    <div class="card-body">
+                        <h6 class="mb-4">
+                            <span class="fw-bold text-black">Mã đơn hàng:</span>
+                            <span class="primary-color"> #@item.Order.Id</span>
+                        </h6>
 
-                    <div class="card product-info">
-                        <div class="card-body row">
-                            <div class="col">
-                                <span class="fw-bold text-black">Thông tin sản phẩm</span>
-                                <figure class="itemside mb-3">
-                                    <div class="aside">
-                                        <img src="product_image_url.jpg" class="img-sm border" />
-                                    </div>
-                                    <figcaption class="info align-self-center">
-                                        <p class="title">Tên Sản Phẩm <br />x 2</p>
-                                        <span class="text-black">300,000₫</span>
-                                    </figcaption>
-                                </figure>
-                            </div>
-                            <div class="col">
-                                <strong class="fw-bold text-black">Địa chỉ giao hàng</strong> <br />
-                                <span class="text-black">123 Đường ABC, Quận XYZ</span>
-                            </div>
-                            <div class="col">
-                                <strong class="fw-bold text-black">SĐT người nhận</strong> <br />
-                                <span class="text-black">0123456789</span>
-                            </div>
-                            <div class="col">
-                                <strong class="fw-bold text-black">Tên người nhận</strong> <br />
-                                <span class="text-black">Nguyễn Văn A</span>
-                            </div>
-                            <div class="col">
-                                <strong class="fw-bold text-black">Thanh toán</strong> <br />
-                                <span class="text-black">COD</span>
-                            </div>
-                            <div class="col">
-                                <strong class="fw-bold text-black">Ngày đặt hàng</strong> <br />
-                                <span class="text-black">12-11-2024 14:30</span>
+                        <div class="card product-info">
+                            <div class="card-body row">
+                                <div class="col">
+                                    <span class="fw-bold text-black">Thông tin sản phẩm</span>
+                                    <figure class="itemside mb-3">
+                                        <div class="aside">
+                                            <img src="product_image_url.jpg" class="img-sm border" />
+                                        </div>
+                                        <figcaption class="info align-self-center">
+                                            <p class="title">@item.Flower.Name <br />x @item.Quantity</p>
+                                            <span class="text-black">300,000₫</span>
+                                        </figcaption>
+                                    </figure>
+                                </div>
+                                <div class="col">
+                                    <strong class="fw-bold text-black">Địa chỉ giao hàng</strong> <br />
+                                    <span class="text-black">@item.Order.BuyerAddress</span>
+                                </div>
+                                <div class="col">
+                                    <strong class="fw-bold text-black">SĐT người nhận</strong> <br />
+                                    <span class="text-black">@item.Order.BuyerPhone</span>
+                                </div>
+                                <div class="col">
+                                    <strong class="fw-bold text-black">Tên người nhận</strong> <br />
+                                    <span class="text-black">@item.Order.BuyerName</span>
+                                </div>
+                                <div class="col">
+                                    <strong class="fw-bold text-black">Thanh toán</strong> <br />
+                                    <span class="text-black">COD</span>
+                                </div>
+                                <div class="col">
+                                    <strong class="fw-bold text-black">Ngày đặt hàng</strong> <br />
+                                    <span class="text-black">@item.Order.CreatedAt</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Tracking Steps -->
-                    <div class="track text-black">
-                        <div class="step active">
-                            <span class="icon"> <i class="fa fa-check"></i> </span>
-                            <span class="text">Đã giao</span>
+                        <!-- Tracking Steps -->
+                        <div class="track text-black">
+                            <div class="step active">
+                                <span class="icon"> <i class="fa fa-check"></i> </span>
+                                <span class="text">Đã giao</span>
+                            </div>
+                            <div class="step">
+                                <span class="icon"> <i class="fa fa-clock"></i> </span>
+                                <span class="text">Đang giao</span>
+                            </div>
                         </div>
-                        <div class="step">
-                            <span class="icon"> <i class="fa fa-clock"></i> </span>
-                            <span class="text">Đang giao</span>
-                        </div>
-                    </div>
 
-                    <!-- Buttons -->
-                    <div class="d-flex justify-content-center align-items-center">
-                        <button class="btn btn-danger mt-4">Huỷ đơn hàng</button>
-                        <button class="btn btn-success mt-4">Xác nhận đã nhận hàng</button>
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-center align-items-center">
+                            <button class="btn btn-danger mt-4">Huỷ đơn hàng</button>
+                            <button class="btn btn-success mt-4">Xác nhận đã nhận hàng</button>
+                        </div>
                     </div>
-                </div>
+                }
             </article>
         </div>
     </section>
