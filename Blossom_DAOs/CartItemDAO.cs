@@ -34,7 +34,7 @@ namespace Blossom_DAOs
             try
             {
                 await _context.CartItems.AddAsync(cartItem);
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
                 result = true;
             }
             catch (Exception)
