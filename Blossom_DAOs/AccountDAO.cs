@@ -90,7 +90,7 @@ namespace Blossom_DAOs
                 UserName = email,
                 Email = email,
                 Gender = gender,
-                Avatar = "assets/images/avatar.svg",
+                Avatar = "/assets/images/avatar.svg",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
             };
