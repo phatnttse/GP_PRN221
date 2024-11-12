@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blossom_RazorWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241111144005_AddNotificationTablev2")]
-    partial class AddNotificationTablev2
+    [Migration("20241112072401_update-order-details")]
+    partial class updateorderdetails
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,9 +33,16 @@ namespace Blossom_RazorWeb.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Avatar")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(10, 2)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -152,11 +159,18 @@ namespace Blossom_RazorWeb.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("ExpireDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("FlowerCategoryId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("FlowerExpireDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -294,8 +308,8 @@ namespace Blossom_RazorWeb.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("OrderId1")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10, 2)");
@@ -318,8 +332,6 @@ namespace Blossom_RazorWeb.Migrations
                     b.HasIndex("FlowerId");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("OrderId1");
 
                     b.HasIndex("SellerId");
 
@@ -436,6 +448,54 @@ namespace Blossom_RazorWeb.Migrations
                     b.HasIndex("ReceiverId");
 
                     b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("Blossom_BusinessObjects.WalletLog", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ActorEnum")
+                        .HasColumnType("int")
+                        .HasColumnName("ActorEnum");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Amount");
+
+                    b.Property<decimal?>("Balance")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Balance");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("IsRefund")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsRefund");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int")
+                        .HasColumnName("Type");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WalletLogs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -602,14 +662,10 @@ namespace Blossom_RazorWeb.Migrations
                         .IsRequired();
 
                     b.HasOne("Blossom_BusinessObjects.Entities.Order", "Order")
-                        .WithMany()
+                        .WithMany("OrderDetails")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("Blossom_BusinessObjects.Entities.Order", null)
-                        .WithMany("OrderDetails")
-                        .HasForeignKey("OrderId1");
 
                     b.HasOne("Blossom_BusinessObjects.Entities.Account", "Seller")
                         .WithMany()
@@ -652,6 +708,17 @@ namespace Blossom_RazorWeb.Migrations
                         .IsRequired();
 
                     b.Navigation("Receiver");
+                });
+
+            modelBuilder.Entity("Blossom_BusinessObjects.WalletLog", b =>
+                {
+                    b.HasOne("Blossom_BusinessObjects.Entities.Account", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
