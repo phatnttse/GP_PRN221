@@ -27,6 +27,8 @@ namespace Blossom_Repositories
         public Task<bool> Login(string email, string password) => _accountDAO.Login(email, password);
         public Task<bool> Logout() => _accountDAO.Logout();
         public Task<List<string>> GetRoles(Account account) => _accountDAO.GetRoles(account);
+        public Task<Account> UpdateAccount(Account account) => _accountDAO.UpdateAccount(account);
+
 
     }
 }

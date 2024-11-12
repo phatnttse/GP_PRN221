@@ -1,3 +1,4 @@
+using Blossom_BusinessObjects.Configurations;
 using Blossom_BusinessObjects.Entities;
 using Blossom_DAOs;
 using Blossom_Repositories;
@@ -25,6 +26,8 @@ namespace Blossom_RazorWeb
             {
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationsAssembly));
             });
+
+            builder.Services.Configure<MomoConfig>(builder.Configuration.GetSection("Momo"));
 
             // Add Identity
             builder.Services.AddIdentity<Account, Role>()
@@ -80,6 +83,7 @@ namespace Blossom_RazorWeb
             builder.Services.AddScoped<WalletLogDAO>();
             builder.Services.AddScoped<IWalletLogRepository, WalletLogRepository>();
             builder.Services.AddScoped<IWalletLogService, WalletLogService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddHttpClient();
             // Add services to the container.
             builder.Services.AddRazorPages();
