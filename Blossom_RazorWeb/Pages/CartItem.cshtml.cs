@@ -41,8 +41,18 @@ namespace Blossom_RazorWeb.Pages
             {
                 var currentUser = _userIdAccessor.GetCurrentUserId();
                 // Gi? s? b?n có ph??ng th?c AddFlowerListingToCart trong service
-                await _context.AddFlowerListingToCart(currentUser, flowerId, 1);
+                var cartItem = await _context.GetByUserAndFlowerAsync(currentUser, flowerId);
+                var flowerQuantity = await _flowerService.GetFlower(flowerId);
 
+                if (cartItem.Quantity <= flowerQuantity.StockQuantity)
+                {
+                    await _context.AddFlowerListingToCart(currentUser, flowerId, 1);
+                }
+                if (cartItem.Quantity >= flowerQuantity.StockQuantity)
+                {
+                    cartItem.Quantity = flowerQuantity.StockQuantity;
+                    await _context.AddFlowerListingToCart(currentUser, flowerId, 0);
+                }
                 // Có th? b?n c?n ?i?u h??ng ng??i dùng ??n gi? hàng ho?c trang khác
                 return RedirectToPage("/CartItem");
             }
@@ -58,8 +68,14 @@ namespace Blossom_RazorWeb.Pages
             {
                 var currentUser = _userIdAccessor.GetCurrentUserId();
                 // Gi? s? b?n có ph??ng th?c AddFlowerListingToCart trong service
-                await _context. ReduceFlowerListingQuantityInCart(currentUser, flowerId, 1);
+                await _context.ReduceFlowerListingQuantityInCart(currentUser, flowerId, 1);
+                var cartItem = await _context.GetByUserAndFlowerAsync(currentUser, flowerId);
 
+                if (cartItem.Quantity <= 0)
+                {
+                    // N?u s? l??ng <= 0, xóa s?n ph?m kh?i gi? hàng
+                    await _context.DeleteCartItem(currentUser, flowerId);
+                }
                 // Có th? b?n c?n ?i?u h??ng ng??i dùng ??n gi? hàng ho?c trang khác
                 return RedirectToPage("/CartItem");
             }
