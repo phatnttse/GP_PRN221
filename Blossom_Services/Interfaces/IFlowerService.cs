@@ -11,6 +11,7 @@ namespace Blossom_Services.Interfaces
     {
         public Task<List<Flower>> GetFlowers();
         public Task<Flower> GetFlower(string id);
+        public Task<List<Flower>> GetExpiredFlowers();
         public Task<bool> AddFlower(Flower flower);
         public Task<bool> UpdateFlower(Flower flower);
         public Task<bool> DeleteFlower(string id);

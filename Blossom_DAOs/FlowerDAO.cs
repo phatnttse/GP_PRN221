@@ -1,4 +1,5 @@
 ﻿using Blossom_BusinessObjects.Entities;
+using Blossom_BusinessObjects.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,18 @@ namespace Blossom_DAOs
             }
 
             return Task.FromResult(flower);
+        }
+
+        public async Task<List<Flower>> GetExpiredFlowers()
+        {
+            var today = DateTime.Today;
+
+            var expiredFlowers = await _context.Flowers
+                .Where(f => f.ExpireDate.HasValue && f.ExpireDate.Value.Date <= today && f.Status != FlowerStatus.EXPIRED)
+                .Include(f => f.FlowerCategory) // Include related FlowerCategory if needed
+                .ToListAsync();
+
+            return expiredFlowers;
         }
 
         public Task<bool> AddFlower(Flower flower)

@@ -20,5 +20,6 @@ namespace Blossom_Repositories
         public Task<bool> UpdateFlower(Flower flower) => _flowerDAO.UpdateFlower(flower);
         public Task<bool> IncrementViews(string flowerId) => _flowerDAO.IncrementViews(flowerId);
         public Task<bool> DeleteFlower(string id) => _flowerDAO.DeleteFlower(id);
+        public Task<List<Flower>> GetExpiredFlowers() => _flowerDAO.GetExpiredFlowers();
     }
 }
