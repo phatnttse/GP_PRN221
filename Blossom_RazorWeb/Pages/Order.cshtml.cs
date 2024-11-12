@@ -1,4 +1,4 @@
-using Blossom_BusinessObjects;
+﻿using Blossom_BusinessObjects;
 using Blossom_BusinessObjects.Entities;
 using Blossom_BusinessObjects.Entities.Enums;
 using Blossom_Services.Interfaces;
@@ -176,22 +176,37 @@ namespace Blossom_RazorWeb.Pages
                         };
                         Account seller = await _accountService.GetAccountById(flower.SellerId);
                         Account user = await _accountService.GetAccountById(userId);
-                        // calculator amount
-                        decimal feeService = 5 / 100;
-                        decimal calAmountForUser = flower.Price * cartItem.Quantity;
-                        decimal calAmoutnForSeller = calAmountForUser * feeService;
 
+                        if (selectedPaymentMethod.Equals(PaymentMethodEnum.WALLET)) {
+                            //check balance of user 
 
-                        //handle balance for user 
+                            // calculator amount
+                            decimal feeService = 5 / 100;
+                            decimal calAmountForUser = flower.Price * cartItem.Quantity;
+                            decimal calAmoutnForSeller = calAmountForUser * feeService;
+                            if (user.Balance.CompareTo(calAmountForUser) < 0)
+                            {
+                                TempData["Error"] = "Số dư hiện tại của bạn không đủ, vui lòng nạp thêm!";
+                                return Page();
+                            }
 
-                        //handle balance for seller
+                            user.Balance = user.Balance - calAmountForUser;
+                            seller.Balance = seller.Balance + calAmoutnForSeller;
+
+                            //handle balance for user 
+                            Account updateBalanceUser = await _accountService.UpdateAccount(user);
+                            //handle balance for seller
+                            Account updateBalanceSeller = await _accountService.UpdateAccount(seller);
+                            var buyerLog = CreateWalletLog(userId, calAmountForUser, WalletLogTypeEnum.SUBTRACT, WalletLogActorEnum.BUYER, updateBalanceUser.Balance);
+                            var sellerLog = CreateWalletLog(flower.SellerId, calAmoutnForSeller, WalletLogTypeEnum.ADD, WalletLogActorEnum.SELLER, updateBalanceSeller.Balance);
+                            _walletLogService.Create(buyerLog); 
+                            _walletLogService.Create(sellerLog);
+                        }
+
 
                         // Add the order details
                         var createdOrderDetail = _orderDetailService.AddOrderDetail(orderDetail);
-                        var buyerLog = CreateWalletLog(userId, calAmountForUser, WalletLogTypeEnum.SUBTRACT, WalletLogActorEnum.BUYER, user.Balance);
-                        var sellerLog = CreateWalletLog(flower.SellerId, calAmoutnForSeller, WalletLogTypeEnum.ADD, WalletLogActorEnum.SELLER, seller.Balance);
-                        _walletLogService.Create(buyerLog);
-                        _walletLogService.Create(sellerLog);
+
 
                         if (!createdOrderDetail)
                         {
