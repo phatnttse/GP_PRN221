@@ -39,6 +39,18 @@ namespace Blossom_DAOs
             return account;
         }
 
+        public async Task<Account> GetAccountById(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentException("ID không được để trống", nameof(id));
+            }
+
+            var account = await _userManager.FindByIdAsync(id);
+
+            return account;
+        }
+
         public async Task<bool> Login(string email, string password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
