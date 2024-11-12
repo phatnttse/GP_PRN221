@@ -1,0 +1,19 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.Admin.CategoryManagement.CreateModel
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Create New Flower Category";
+}
+<h2>Create Flower Category</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Name">Category Name</label>
+        <input type="text" class="form-control" id="Name" name="FlowerCategory.Name" required />
+    </div>
+    <div class="form-group">
+        <label for="ImageUrl">Category Image URL</label>
+        <input type="text" class="form-control" id="ImageUrl" name="FlowerCategory.ImageUrl" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

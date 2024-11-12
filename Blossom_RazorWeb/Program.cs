@@ -54,12 +54,27 @@ namespace Blossom_RazorWeb
 
             builder.Services.AddScoped<AccountDAO>();
             builder.Services.AddScoped<FlowerDAO>();
+            builder.Services.AddScoped<FlowerCategoryDAO>();
+            builder.Services.AddScoped<FeedbackDAO>();
+            builder.Services.AddScoped<NotificationDAO>();
             builder.Services.AddScoped<CartItemDAO>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();            
+            builder.Services.AddScoped<IFlowerCategoryRepository, FlowerCategoryRepository>();
+            builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();
             builder.Services.AddScoped<ICartItemRepository, CartItemRepository>(); 
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IFlowerService, FlowerService>();
+            builder.Services.AddScoped<IFlowerCategoryService, FlowerCategoryService>();
+            builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+
+            builder.Services.AddScoped<OrderDAO>();
+            builder.Services.AddScoped<OrderDetailDAO>();
+            builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<ICartItemService, CartItemService>();
             builder.Services.AddScoped<IUserIdAssessor, UserIdAccessor>();
 
