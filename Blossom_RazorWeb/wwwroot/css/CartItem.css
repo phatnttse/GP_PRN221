@@ -1,0 +1,65 @@
+﻿body {
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif; /* Font hiện đại */
+}
+
+.page-header {
+    position: relative;
+    background-image: url('https://c4.wallpaperflare.com/wallpaper/136/529/120/artistic-japanese-cherry-blossom-pagoda-sakura-hd-wallpaper-preview.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 120px 0;
+    text-align: center;
+    border-bottom: 5px solid rgba(255, 192, 203, 0.8); /* Đường viền màu hồng phấn */
+}
+
+    .page-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.4); /* Nền trắng nhẹ để làm nổi bật chữ */
+        z-index: 1;
+    }
+
+    .page-header h2 {
+        position: relative;
+        z-index: 2;
+        font-weight: bold;
+        font-size: 3rem; /* Kích thước chữ lớn hơn */
+        color: #ff69b4; /* Màu hồng phấn cho chữ "Cart" */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Bóng chữ để tăng độ nổi bật */
+    }
+
+.breadcrumb {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.breadcrumb-item {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+    .breadcrumb-item a {
+        color: #ff69b4; /* Màu chữ cho liên kết là màu hồng phấn */
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+            color: #e74c3c; /* Màu khi hover */
+        }
+
+    .breadcrumb-item.active {
+        color: #ff69b4; /* Màu cho item hiện tại là màu hồng phấn */
+        font-weight: bold;
+    }

@@ -101,7 +101,7 @@ namespace Blossom_DAOs
             builder.Entity<OrderDetail>(entity =>
             {
                 entity.HasOne(od => od.Order)
-                    .WithMany()
+                    .WithMany(o => o.OrderDetails)
                     .HasForeignKey(od => od.OrderId)
                     .OnDelete(DeleteBehavior.Restrict);
 

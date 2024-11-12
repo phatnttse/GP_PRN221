@@ -237,14 +237,17 @@
                   <div class="button-area p-3 pt-0">
                     <div class="row g-1 mt-2">
                       <div class="col-12">
-                        <a href="javascript:;" class="btn btn-primary rounded-1 p-2 fs-7 fw-bold btn-cart">
-                          <div class="d-flex align-items-center justify-content-center gap-1">
-                            <svg width="24" height="24">
-                              <use xlink:href="#cart"></use>
-                            </svg>
-                            Add to Cart
-                          </div>
-                        </a>
+                                                <!-- Form gửi request POST khi nhấn nút "Add to Cart" -->
+                                                <form method="post" asp-page-handler="AddToCart">
+                                                    <input type="hidden" name="productId" value="@flower.Id" />
+                                                    <input type="hidden" name="quantity" value="1" /> <!-- Bạn có thể thay đổi giá trị này theo yêu cầu -->
+                                                    <button type="submit" name="flowerId" value="@flower.Id" class="btn btn-primary rounded-1 p-2 fs-7 fw-bold">
+                                                        <div class="d-flex align-items-center justify-content-center gap-1">
+
+                                                            Add to Cart
+                                                        </div>
+                                                    </button>
+                                                </form>
                       </div>
                     </div>
                   </div>
