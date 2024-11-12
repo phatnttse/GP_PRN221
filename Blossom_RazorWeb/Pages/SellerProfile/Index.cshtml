@@ -1,4 +1,84 @@
-﻿@page
+﻿@page "{sellerId?}"
 @model Blossom_RazorWeb.Pages.SellerProfile.IndexModel
 @{
+    ViewData["Title"] = "Seller Profile";
 }
+
+<section class="section-seller-profile">
+    <div class="card w-100 mx-auto">
+        <div class="card-body">
+            <div class="row align-items-center">
+                @if (Model.SellerInfo != null)
+                {
+                    <div class="col-12 col-lg-6 text-center mb-2">
+                        <img src="@Model.SellerInfo.Avatar" alt="@Model.SellerInfo.FullName" class="rounded mb-2" width="100" />
+                        <h5 class="mb-0 mt-2">@Model.SellerInfo.FullName</h5>
+                        <p class="text-muted">@Model.SellerInfo.Email</p>
+                        <div class="d-flex justify-content-center align-items-center flex-wrap">
+                            <button class="btn btn-danger">@Model.SellerInfo.Gender</button>
+                        </div>
+                    </div>
+
+                    <!-- Shop Info -->
+                    <div class="col-12 col-lg-6 text-dark mt-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-2 justify-content-center">
+                                    <span class="me-2"><i class="material-icons">inventory_2</i></span>
+                                    <span>Đã đăng bán: <strong>@Model.FlowerList.Count sản phẩm</strong></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-2 justify-content-center">
+                                    <span class="me-2"><i class="material-icons">calendar_today</i></span>
+                                    <span>Tham Gia: <strong>@Model.SellerInfo.CreatedAt.ToString("yyyy-MM-dd")</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="mt-4">
+                <div class="nav nav-tabs">
+                    <a class="nav-item nav-link active" href="#">Tất cả sản phẩm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product List -->
+    <div class="container mt-4">
+        <div class="row">
+            @if (Model.FlowerList != null && Model.FlowerList.Count > 0)
+            {
+                foreach (var flower in Model.FlowerList)
+                {
+                    <div class="col-md-3">
+                        <div class="card product-item">
+                            <figure>
+                                <a href="javascript:void(0)" title="Product Title" onclick="location.href='/Products/Details/@flower.Id'">
+                                    <img src="@flower.ImageUrl" alt="@flower.Name" class="w-100" />
+                                </a>
+                            </figure>
+                            <div class="card-body text-center">
+                                <h5 class="card-title">@flower.Name</h5>
+                                <p class="text-muted">@flower.Description?.Substring(0, 20)...</p>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <del>@flower.Price.ToString("N0") ₫</del>
+                                    <span class="text-dark fw-semibold ms-2">@flower.Price.ToString("N0") ₫</span>
+                                </div>
+                                <a href="javascript:void(0)" class="btn btn-primary mt-2" onclick="location.href='/Cart/Add?flowerId=@flower.Id'">Add to Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center">No products available for this seller.</p>
+            }
+        </div>
+    </div>
+</section>
