@@ -3,6 +3,18 @@
 @{
     ViewData["Title"] = "Create New Order";
 }
+@{
+    var errorMessage = TempData["Error"] as string;
+}
+
+
+
+@if (TempData["Error"] != null)
+{
+    <script type="text/javascript">
+        toastr.warning('@TempData["Error"]');
+    </script>
+}
 
 <form method="post">
     <div class="container-fluid" style="margin-top:100px">
