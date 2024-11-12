@@ -10,6 +10,7 @@
     <ProjectReference Include="..\Blossom_Repositories\Blossom_Repositories.csproj">
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Blossom_Utilities\Blossom_Utilities.csproj" />
   </ItemGroup>
 
 </Project>

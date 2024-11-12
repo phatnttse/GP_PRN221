@@ -34,6 +34,7 @@ namespace Blossom_DAOs
             return _context.WalletLogs
                 .Where(w => w.UserId == userId)
                 .Include(w => w.User)
+                .OrderByDescending(w => w.CreatedAt)
                 .ToList();
         }
 

@@ -16,6 +16,8 @@ namespace Blossom_Repositories.Interfaces
         public Task<bool> Login(string email, string password);
         public Task<bool> Logout();
         public Task<List<string>> GetRoles(Account account);
+        public Task<Account> UpdateAccount(Account account);
+
 
     }
 }

@@ -133,5 +133,18 @@ namespace Blossom_DAOs
         {
             return (await _userManager.GetRolesAsync(account)).ToList();
         }
+
+        public async Task<Account> UpdateAccount(Account account)
+        {
+            var result = await _userManager.UpdateAsync(account);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Cập nhật tài khoản thất bại: {errors}");
+            }
+
+            return account;
+        }
     }
 }

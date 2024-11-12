@@ -68,6 +68,7 @@ namespace Blossom_DAOs
                     .HasForeignKey(f => f.UserId)
                     .OnDelete(DeleteBehavior.Restrict); // Changed to Restrict
             });
+
             // Configure Feedback relationships
             builder.Entity<Feedback>(entity =>
             {
@@ -174,7 +175,7 @@ namespace Blossom_DAOs
             foreach (var entry in modifiedEntries)
             {
                 var entity = (IAuditableEntity)entry.Entity;
-                var now = DateTime.UtcNow;
+                var now = DateTime.Now;
 
                 if (entry.State == EntityState.Added)
                 {
