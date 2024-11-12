@@ -41,6 +41,18 @@ namespace Blossom_DAOs
             return Task.FromResult(flower);
         }
 
+        public async Task<List<Flower>> GetExpiredFlowers()
+        {
+            var today = DateTime.Today;
+
+            var expiredFlowers = await _context.Flowers
+                .Where(f => f.ExpireDate.HasValue && f.ExpireDate.Value.Date <= today && f.Status != FlowerStatus.EXPIRED)
+                .Include(f => f.FlowerCategory) // Include related FlowerCategory if needed
+                .ToListAsync();
+
+            return expiredFlowers;
+        }
+
         public Task<bool> AddFlower(Flower flower)
         {
             _context.Flowers.Add(flower);
@@ -50,6 +62,23 @@ namespace Blossom_DAOs
 
         public Task<bool> UpdateFlower(Flower flower)
         {
+            _context.Flowers.Update(flower);
+            _context.SaveChanges();
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> IncrementViews(string flowerId)
+        {
+            var flower = _context.Flowers.FirstOrDefault(f => f.Id == flowerId);
+
+            if (flower == null)
+            {
+                throw new Exception("Flower not found");
+            }
+
+            // Increment the Views count by 1
+            flower.Views += 1;
+
             _context.Flowers.Update(flower);
             _context.SaveChanges();
             return Task.FromResult(true);
