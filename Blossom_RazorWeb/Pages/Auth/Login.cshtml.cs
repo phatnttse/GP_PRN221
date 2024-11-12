@@ -1,8 +1,6 @@
 ﻿using Blossom_Services.Interfaces;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
 
 namespace Blossom_RazorWeb.Pages.Auth
 {
@@ -22,13 +20,8 @@ namespace Blossom_RazorWeb.Pages.Auth
 
         public string ErrorMessage { get; private set; }
 
-        public IActionResult OnGet()
+        public void OnGet()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToPage("/Index");
-            }
-            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -43,23 +36,11 @@ namespace Blossom_RazorWeb.Pages.Auth
 
                     if (account != null)
                     {
-                        var claims = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Name, account.FullName),
-                            new Claim(ClaimTypes.Email, account.Email),
-                            new Claim(ClaimTypes.NameIdentifier, account.Id),
-                            new Claim("Avatar", account.Avatar)
-                        };
                         HttpContext.Session.SetString("Avatar", account.Avatar);
+                        HttpContext.Session.SetString("AccountId", account.Id);
 
                         var roles = await _accountService.GetRoles(account);
-
-                        foreach (var role in roles)
-                        {
-                            claims.Add(new Claim(ClaimTypes.Role, role));
-                        }
-
-                     
+                        HttpContext.Session.SetString("Role", roles[0]);
 
                         TempData["LoginSuccessMessage"] = "Đăng nhập thành công!";
 
