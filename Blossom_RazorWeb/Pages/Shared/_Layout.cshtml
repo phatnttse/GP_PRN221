@@ -296,7 +296,7 @@
                         <li class="nav-item active">
                             @if (role == "ADMIN")
                             {
-                                <a asp-page="/Admin/Index" class="nav-link">Kênh Admin</a>
+                                <a asp-page="/Admin/FlowerManagement/Index" class="nav-link">Kênh Admin</a>
                             }
                             else
                             {
@@ -343,7 +343,7 @@
                                                 account_circle
                                             </span>
 
-                                            <a class="text-decoration-none">
+                                            <a class="text-decoration-none" asp-page="/Profile/Index">
                                                 Hồ sơ
                                             </a>
                                         </div>
