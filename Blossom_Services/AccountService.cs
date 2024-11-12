@@ -15,6 +15,9 @@ namespace Blossom_Services
         }
 
         public Task<Account> GetAccount(string email) => _accountRepository.GetAccount(email);
+
+        public Task<Account> GetAccountById(string id) => _accountRepository.GetAccountById(id);
+
         public Task<bool> RegisterAccountAsync(string fullName, string email, string password, Gender gender) => _accountRepository.RegisterAccountAsync(fullName, email, password, gender);
         public Task<bool> Login(string email, string password) => _accountRepository.Login(email, password);
         public Task<bool> Logout() => _accountRepository.Logout();

@@ -13,13 +13,16 @@ namespace Blossom_Services
     public class CartItemService : ICartItemService
     {
         private readonly ICartItemRepository _cartItemRepository;
-        public CartItemService(ICartItemRepository cartItemRepository) {
+        private readonly IFlowerRepository _flowerRepository;
+        public CartItemService(ICartItemRepository cartItemRepository, IFlowerRepository flowerRepository) {
             _cartItemRepository = cartItemRepository;   
+            _flowerRepository = flowerRepository;
         }
 
         public async Task AddFlowerListingToCart(string user, string flowerId, int quantity)
         {
             var existingCartItem = await _cartItemRepository.GetByUserAndFlowerAsync(user, flowerId);
+            var flowerExisting = await _flowerRepository.GetFlower(flowerId);
 
             if (existingCartItem != null)
             {
@@ -28,7 +31,16 @@ namespace Blossom_Services
                 _cartItemRepository.UpdateCartItem(existingCartItem);
             } else
             {
-                _cartItemRepository.AddFlowerListingToCart(user, existingCartItem);
+                // Nếu chưa tồn tại, tạo mới CartItem và thêm vào
+                var newCartItem = new CartItem
+                {
+                    UserId = user,
+                    FlowerId = flowerId,
+                    Quantity = quantity > flowerExisting.StockQuantity ? flowerExisting.StockQuantity : quantity,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                };
+                _cartItemRepository.AddFlowerListingToCart(user, newCartItem);
             }
 
         }

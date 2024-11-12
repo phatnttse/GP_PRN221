@@ -10,6 +10,18 @@
         toastr.success('@TempData["LoginSuccessMessage"]');
     </script>
 }
+@if (TempData["Message"] != null)
+{
+    <script type="text/javascript">
+        toastr.success('@TempData["Message"]');
+    </script>
+}
+@if (TempData["LoginFailMessage"] != null)
+{
+    <script type="text/javascript">
+        toastr.error('@TempData["LoginFailMessage"]');
+    </script>
+}
 
 <section style="
     background-image: url('assets/images/banner_home.jpg');
@@ -239,7 +251,7 @@
                       <div class="col-12">
                                                 <!-- Form gửi request POST khi nhấn nút "Add to Cart" -->
                                                 <form method="post" asp-page-handler="AddToCart">
-                                                    <input type="hidden" name="productId" value="@flower.Id" />
+                                                    <input type="hidden" name="productId" value="@flower.Id"5 />
                                                     <input type="hidden" name="quantity" value="1" /> <!-- Bạn có thể thay đổi giá trị này theo yêu cầu -->
                                                     <button type="submit" name="flowerId" value="@flower.Id" class="btn btn-primary rounded-1 p-2 fs-7 fw-bold">
                                                         <div class="d-flex align-items-center justify-content-center gap-1">

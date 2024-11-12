@@ -20,6 +20,11 @@ namespace Blossom_DAOs
 
         public Task<List<Flower>> GetFlowers()
         {
+            var flowers = _context.Flowers.Include(c => c.FlowerCategory).Where(f => !f.IsDeleted && f.Status == FlowerStatus.APPROVED).ToList();
+            return Task.FromResult(flowers);
+        }
+        public Task<List<Flower>> GetAdminFlowers()
+        {
             var flowers = _context.Flowers.Include(c => c.FlowerCategory).ToList();
             return Task.FromResult(flowers);
         }
@@ -91,6 +96,11 @@ namespace Blossom_DAOs
             return Task.FromResult(true);
         }
 
+        public Task<List<Flower>> GetFlowersBySeller(string sellerId)
+        {
+            var flowers = _context.Flowers.Include(c => c.FlowerCategory).Where(f => f.SellerId == sellerId ).ToList();
+            return Task.FromResult(flowers);
+        }
 
     }
 }

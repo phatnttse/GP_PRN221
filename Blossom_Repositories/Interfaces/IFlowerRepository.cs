@@ -1,5 +1,4 @@
 ﻿using Blossom_BusinessObjects.Entities;
-using Blossom_DAOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +15,9 @@ namespace Blossom_Repositories.Interfaces
         public Task<bool> AddFlower(Flower flower);
         public Task<bool> UpdateFlower(Flower flower);
         public Task<bool> DeleteFlower(string id);
+        public Task<List<Flower>> GetFlowersBySeller(string sellerId);
+        public Task<List<Flower>> GetAdminFlowers();
+
         public Task<bool> IncrementViews(string flowerId);
     }
 }
