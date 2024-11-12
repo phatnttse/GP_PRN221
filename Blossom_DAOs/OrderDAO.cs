@@ -67,5 +67,8 @@ namespace Blossom_DAOs
             _context.SaveChanges();
             return true;
         }
+        
+        public  List<Order> GetOrdersByAccountId(string user) => _context.Orders.Where(ui => ui.UserId.Equals(user)).ToList();
+        
     }
 }
