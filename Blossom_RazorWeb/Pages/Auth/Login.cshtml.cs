@@ -22,6 +22,7 @@ namespace Blossom_RazorWeb.Pages.Auth
 
         public void OnGet()
         {
+            HttpContext.Session.Clear();
         }
 
         public async Task<IActionResult> OnPostAsync()

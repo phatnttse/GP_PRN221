@@ -39,24 +39,32 @@
                     <ul class="nav-left">
                         <li class="desktop-toggle">
                             <a href="javascript:void(0);">
-                                <i class="anticon"></i>
+                                <span class="material-icons">
+                                    menu_open
+                                </span>
                             </a>
                         </li>
                         <li class="mobile-toggle">
                             <a href="javascript:void(0);">
-                                <i class="anticon"></i>
+                                <span class="material-icons">
+                                    menu
+                                </span>
                             </a>
                         </li>
                         <li>
                             <a href="javascript:void(0);" data-toggle="modal" data-target="#search-drawer">
-                                <i class="anticon anticon-search"></i>
+                                <span class="material-icons">
+                                    search
+                                </span>
                             </a>
                         </li>
                     </ul>
                     <ul class="nav-right">
                         <li class="dropdown dropdown-animated scale-left">
                             <a href="javascript:void(0);" data-toggle="dropdown">
-                                <i class="anticon anticon-bell notification-badge"></i>
+                                <span class="material-icons mt-2">
+                                    notifications
+                                </span>
                             </a>
                             <div class="dropdown-menu pop-notification">
                                 <div class="p-v-15 p-h-25 border-bottom d-flex justify-content-between align-items-center">
@@ -98,8 +106,12 @@
                         </li>
                         <li class="dropdown dropdown-animated scale-left">
                             <div class="pointer" data-toggle="dropdown">
+                                @using Microsoft.AspNetCore.Http
+                                @{
+                                    var avatar = Context.Session.GetString("Avatar");
+                                }
                                 <div class="avatar avatar-image  m-h-10 m-r-15">
-                                    <img src="" alt="">
+                                    <img src="@avatar" alt="">
                                 </div>
                             </div>
                             <div class="p-b-15 p-t-20 dropdown-menu pop-profile">
@@ -151,11 +163,6 @@
                                     </div>
                                 </a>
                             </div>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" data-toggle="modal" data-target="#quick-view">
-                                <i class="anticon anticon-appstore"></i>
-                            </a>
                         </li>
                     </ul>
                 </div>

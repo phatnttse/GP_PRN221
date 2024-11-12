@@ -288,8 +288,20 @@
                                 </li>
                             </ul>
                         </li>
+                        @using Microsoft.AspNetCore.Http
+                        @{
+                            var role = Context.Session.GetString("Role"); 
+                        }
+
                         <li class="nav-item active">
-                            <a asp-page="/SellerChannel/Index" class="nav-link">Kênh người bán</a>
+                            @if (role == "ADMIN")
+                            {
+                                <a asp-page="/Admin/Index" class="nav-link">Kênh Admin</a>
+                            }
+                            else
+                            {
+                                <a asp-page="/SellerChannel/Index" class="nav-link">Kênh người bán</a>
+                            }
                         </li>
                     </ul>
                 </div>
