@@ -3,6 +3,18 @@
 
 @{
     Layout = "_LayoutSellerChannel";
+    string role = HttpContext.Session.GetString("Role");
+
+    if (role == null)
+    {
+        Response.Redirect("/auth/login");
+        TempData["NotPermissionMessage"] = "Vui lòng đăng nhập";
+    }
+
+    if (role == "ADMIN" || role != "USER")
+    {
+        TempData["NotPermissionMessage"] = "Vui lòng truy cập bằng tài khoản người bán";
+    }
 }
 
 <h1>Seller Channel</h1>
