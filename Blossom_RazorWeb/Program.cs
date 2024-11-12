@@ -5,6 +5,8 @@ using Blossom_Repositories;
 using Blossom_Repositories.Interfaces;
 using Blossom_Services;
 using Blossom_Services.Interfaces;
+using Blossom_Utilities;
+using Blossom_Utilities.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -54,6 +56,8 @@ namespace Blossom_RazorWeb
                    options.LogoutPath = "/Auth/Logout";
                  });
 
+            builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration"));
+
 
             builder.Services.AddScoped<AccountDAO>();
             builder.Services.AddScoped<FlowerDAO>();
@@ -85,6 +89,8 @@ namespace Blossom_RazorWeb
             builder.Services.AddScoped<IWalletLogService, WalletLogService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddHttpClient();
+            builder.Services.AddScoped<EmailSender>();
+
             // Add services to the container.
             builder.Services.AddRazorPages();
 
