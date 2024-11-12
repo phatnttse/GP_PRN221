@@ -63,11 +63,23 @@ namespace Blossom_RazorWeb.Pages
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!string.IsNullOrEmpty(userId))
             {
+                
                 CartItems = (await _cartItemService.GetAllCartItemUserIdAsync(userId)).ToList();
             }
-
+            Account account = await _accountService.GetAccountById(userId);
+            if (account != null)
+            {
+                Order = new Order
+                {
+                    BuyerName = account.FullName,
+                    BuyerPhone = account.PhoneNumber,
+                    BuyerEmail = account.Email,
+                    BuyerAddress = account.Address
+                };
+            }
             Flowers = await _flowerService.GetFlowers();
             TotalPrice = 0;
+            
 
             // Calculate total price
             foreach (var detail in CartItems)
