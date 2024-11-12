@@ -246,6 +246,109 @@
         }
 
         }
+
+        .section-wallet {
+    padding: 4rem 0px;
+}
+
+.wallet-header {
+    background-color: #fb9678;
+    border-bottom-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    position: relative;
+}
+
+.transactions {
+    font-family: "Montserrat", sans-serif;
+    margin-top: 1.5rem;
+}
+
+.t-desc {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.t-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.t-time {
+    font-size: 0.9rem;
+}
+
+.t-amount {
+    font-size: 1.2rem;
+}
+
+
+
+    .t-current-balance {
+        font-size: 0.8rem;
+    }
+
+    .t-title {
+        font-size: 1rem;
+    }
+
+    .t-time {
+        font-size: 0.8rem;
+    }
+}
+
+.payment-success-container {
+    text-align: center;
+    padding: 50px;
+
+    h1 {
+        color: #4caf50;
+        font-size: 2.5rem;
+    }
+
+    p {
+        font-size: 1.25rem;
+    }
+
+    #fireworks-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+    }
+}
+
+.text-success {
+    color: #00c292 !important;
+}
+
+.text-warning {
+    color: #fec90f !important;
+}
+
+.badge-danger {
+    background-color: #d9534f;
+}
+
+        .icon-circle-check {
+            background-color: #38a169;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon {
+            color: #fff;
+            width: 24px;
+            height: 24px;
+        }
+
     </style>
 </head>
 <body>
@@ -275,7 +378,7 @@
                 <div class="col-lg-6">
                     <ul class="header-page navbar-nav list-unstyled d-flex flex-row gap-3 gap-lg-5 justify-content-center flex-wrap align-items-center mb-0 fw-bold text-uppercase text-dark">
                         <li class="nav-item active">
-                            <a href="/" class="nav-link">Sản phẩm</a>
+                            <a asp-page="/Products" class="nav-link">Sản phẩm</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle pe-3" role="button" id="pages" data-bs-toggle="dropdown" aria-expanded="false">Trang</a>
@@ -288,8 +391,20 @@
                                 </li>
                             </ul>
                         </li>
+                        @using Microsoft.AspNetCore.Http
+                        @{
+                            var role = Context.Session.GetString("Role"); 
+                        }
+
                         <li class="nav-item active">
-                            <a asp-page="/SellerChannel/Index" class="nav-link">Kênh người bán</a>
+                            @if (role == "ADMIN")
+                            {
+                                <a asp-page="/Admin/FlowerManagement/Index" class="nav-link">Kênh Admin</a>
+                            }
+                            else
+                            {
+                                <a asp-page="/SellerChannel/Index" class="nav-link">Kênh người bán</a>
+                            }
                         </li>
                     </ul>
                 </div>
@@ -308,11 +423,8 @@
                                 @{
                                     var avatar = Context.Session.GetString("Avatar");
                                 }
-
-                                @if (User.Identity != null && User.Identity.IsAuthenticated)
-                                {
-                    
-                                if (!string.IsNullOrEmpty(avatar))
+           
+                                @if (!string.IsNullOrEmpty(avatar))
                                     {
                                         <img src="@avatar" alt="User Avatar" width="24" height="24" style="border-radius: 50%;" />
                                     }
@@ -321,20 +433,11 @@
                                         <svg width="24" height="24">
                                             <use xlink:href="#user"></use>
                                         </svg>
-                                    }
-                                }
-                                else
-                                {
-                                    <svg width="24" height="24">
-                                        <use xlink:href="#user"></use>
-                                    </svg>
-                                }
-
-
+                                    }                            
                             </a>
                             <ul class="dropdown-menu border-0 p-3 rounded-0 shadow"
                                 aria-labelledby="users">
-                                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                                @if (!string.IsNullOrEmpty(avatar))
                                 {
                                     <li>
                                         <div routerLink="/profile"
@@ -343,20 +446,33 @@
                                                 account_circle
                                             </span>
 
-                                            <a class="text-decoration-none">
+                                            <a class="text-decoration-none" asp-page="/Profile/Index">
                                                 Hồ sơ
                                             </a>
                                         </div>
                                     </li>
-                                   
+
                                     <li>
-                                        <div routerLink="/order-history"
+                                        <div
+                                             class="dropdown-item d-flex align-items-center header-menu-item">
+                                            <span class="material-icons me-2">
+                                                wallet
+                                            </span>
+
+                                            <a class="text-decoration-none" asp-page="/Wallet/Index">
+                                                Ví của tôi
+                                            </a>
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div routerLink="/OrderHistory/OrderHistoryDetails"
                                              class="dropdown-item d-flex align-items-center header-menu-item">
                                             <span class="material-icons me-2">
                                                 local_shipping
                                             </span>
 
-                                            <a class="text-decoration-none">
+                                            <a href="/OrderHistory/OrderHistoryDetails" class="text-decoration-none">
                                                 Lịch sử đặt hàng
                                             </a>
                                         </div>

@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Blossom_Utilities\Blossom_Utilities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Admin\OrderManagement\" />
-  </ItemGroup>
-
 </Project>

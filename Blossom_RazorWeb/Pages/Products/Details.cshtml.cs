@@ -35,14 +35,16 @@ namespace Blossom_RazorWeb.Pages.Products
         public async Task<IActionResult> OnGetAsync(string id)
         {
             Flower = await _flowerService.GetFlower(id);
-            ListFeedback = await _feedbackService.GetFeedbackByFlowerIdAsync(id);
-
-            SellerInfo = Flower.Seller;
 
             if (Flower == null)
             {
                 return NotFound();
             }
+
+            await _flowerService.IncrementViews(id);
+            ListFeedback = await _feedbackService.GetFeedbackByFlowerIdAsync(id);
+
+            SellerInfo = Flower.Seller;
 
             return Page();
         }

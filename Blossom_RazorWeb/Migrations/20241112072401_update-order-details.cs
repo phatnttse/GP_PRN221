@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Blossom_RazorWeb.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class updateorderdetails : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,8 +35,10 @@ namespace Blossom_RazorWeb.Migrations
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -179,6 +181,32 @@ namespace Blossom_RazorWeb.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    DestinationScreen = table.Column<int>(type: "int", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifications_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -207,21 +235,50 @@ namespace Blossom_RazorWeb.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WalletLogs",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    ActorEnum = table.Column<int>(type: "int", nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    PaymentMethod = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    IsRefund = table.Column<bool>(type: "bit", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WalletLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WalletLogs_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Flowers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SellerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     StockQuantity = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    RejectReason = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RejectReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Views = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FlowerExpireDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     FlowerCategoryId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -272,6 +329,35 @@ namespace Blossom_RazorWeb.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Feedbacks",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FlowerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feedbacks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Feedbacks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Feedbacks_Flowers_FlowerId",
+                        column: x => x.FlowerId,
+                        principalTable: "Flowers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderDetails",
                 columns: table => new
                 {
@@ -281,9 +367,9 @@ namespace Blossom_RazorWeb.Migrations
                     FlowerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
+                    PaymentMethod = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    OrderId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -308,11 +394,6 @@ namespace Blossom_RazorWeb.Migrations
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_OrderDetails_Orders_OrderId1",
-                        column: x => x.OrderId1,
-                        principalTable: "Orders",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -365,6 +446,16 @@ namespace Blossom_RazorWeb.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_FlowerId",
+                table: "Feedbacks",
+                column: "FlowerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_UserId",
+                table: "Feedbacks",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Flowers_FlowerCategoryId",
                 table: "Flowers",
                 column: "FlowerCategoryId");
@@ -373,6 +464,11 @@ namespace Blossom_RazorWeb.Migrations
                 name: "IX_Flowers_SellerId",
                 table: "Flowers",
                 column: "SellerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_ReceiverId",
+                table: "Notifications",
+                column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_FlowerId",
@@ -385,11 +481,6 @@ namespace Blossom_RazorWeb.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderDetails_OrderId1",
-                table: "OrderDetails",
-                column: "OrderId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OrderDetails_SellerId",
                 table: "OrderDetails",
                 column: "SellerId");
@@ -397,6 +488,11 @@ namespace Blossom_RazorWeb.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
                 table: "Orders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WalletLogs_UserId",
+                table: "WalletLogs",
                 column: "UserId");
         }
 
@@ -422,7 +518,16 @@ namespace Blossom_RazorWeb.Migrations
                 name: "CartItems");
 
             migrationBuilder.DropTable(
+                name: "Feedbacks");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
+
+            migrationBuilder.DropTable(
                 name: "OrderDetails");
+
+            migrationBuilder.DropTable(
+                name: "WalletLogs");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

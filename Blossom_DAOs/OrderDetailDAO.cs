@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -74,6 +75,18 @@ namespace Blossom_DAOs
             _context.OrderDetails.Remove(orderDetail);
             _context.SaveChanges();
             return Task.FromResult(true);
+        }
+
+        public Task<List<OrderDetail>> GetOrderDetailsByUserName(string accountId)
+        {
+            var orderDetails = _context.OrderDetails
+                .Include(od => od.Order)      
+                .Include(od => od.Flower)     
+                .Include(od => od.Seller)    
+                .Where(od => od.Order.UserId == accountId)
+                .ToList();
+
+            return Task.FromResult(orderDetails);
         }
     }
 }

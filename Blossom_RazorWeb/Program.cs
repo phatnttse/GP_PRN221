@@ -1,3 +1,4 @@
+using Blossom_BusinessObjects.Configurations;
 using Blossom_BusinessObjects.Entities;
 using Blossom_DAOs;
 using Blossom_Repositories;
@@ -27,6 +28,8 @@ namespace Blossom_RazorWeb
             {
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationsAssembly));
             });
+
+            builder.Services.Configure<MomoConfig>(builder.Configuration.GetSection("Momo"));
 
             // Add Identity
             builder.Services.AddIdentity<Account, Role>()
@@ -81,6 +84,11 @@ namespace Blossom_RazorWeb
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<ICartItemService, CartItemService>();
             builder.Services.AddScoped<IUserIdAssessor, UserIdAccessor>();
+            builder.Services.AddScoped<WalletLogDAO>();
+            builder.Services.AddScoped<IWalletLogRepository, WalletLogRepository>();
+            builder.Services.AddScoped<IWalletLogService, WalletLogService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddHttpClient();
             builder.Services.AddScoped<EmailSender>();
 
             // Add services to the container.
@@ -97,6 +105,7 @@ namespace Blossom_RazorWeb
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

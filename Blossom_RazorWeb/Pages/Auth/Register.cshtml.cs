@@ -32,13 +32,8 @@ namespace Blossom_RazorWeb.Pages.Auth
         public string ErrorMessage { get; private set; }
 
 
-        public IActionResult OnGet()
+        public void OnGet()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToPage("/Index"); 
-            }
-            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()

@@ -1,0 +1,42 @@
+﻿body {
+}
+.section-order-history {
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+}
+
+.track {
+    display: flex;
+    margin: 20px 0;
+}
+
+    .track .step {
+        flex-grow: 1;
+        text-align: center;
+        position: relative;
+    }
+
+        .track .step.active .icon {
+            background: #148609;
+            color: #fff;
+        }
+
+    .track .icon {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        background: #ddd;
+        border-radius: 50%;
+    }
+
+    .track .text {
+        display: block;
+        margin-top: 7px;
+    }
+
+.img-sm {
+    width: 80px;
+    height: 80px;
+}
+

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Blossom_BusinessObjects.Entities.Enums;
+using Blossom_BusinessObjects.Enums;
 
 namespace Blossom_BusinessObjects.Entities
 {
@@ -23,6 +24,8 @@ namespace Blossom_BusinessObjects.Entities
         public decimal Price { get; set; }
 
         public int Quantity { get; set; }
+
+        public PaymentMethodEnum PaymentMethod { get; set; }
 
         [EnumDataType(typeof(OrderDetailStatus))]
         public OrderDetailStatus Status { get; set; }
