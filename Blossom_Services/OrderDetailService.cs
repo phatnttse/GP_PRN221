@@ -12,10 +12,12 @@ namespace Blossom_Services
     public class OrderDetailService : IOrderDetailService
     {
         private readonly IOrderDetailRepository _orderDetailRepository;
+        private readonly IUserIdAssessor _userIdAssessor;
 
-        public OrderDetailService(IOrderDetailRepository orderDetailRepository)
+        public OrderDetailService(IOrderDetailRepository orderDetailRepository, IUserIdAssessor userIdAssessor)
         {
             _orderDetailRepository = orderDetailRepository;
+            _userIdAssessor = userIdAssessor;
         }
 
         public List<OrderDetail> GetOrderDetails(string orderId)
@@ -41,6 +43,16 @@ namespace Blossom_Services
         public bool DeleteOrderDetail(string id)
         {
             return _orderDetailRepository.DeleteOrderDetail(id);
+        }
+
+        public List<OrderDetail> GetOrderDetailsById(string username)
+        {
+            var existingUser = _userIdAssessor.GetCurrentUserId();
+            if (existingUser != null) { 
+                var orderDetail =_orderDetailRepository.GetOrderDetailsById(username);
+                return orderDetail.ToList() ?? new List<OrderDetail>();
+            }
+            return new List<OrderDetail>();
         }
     }
 }
