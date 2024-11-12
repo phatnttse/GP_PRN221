@@ -26,7 +26,6 @@ namespace Blossom_RazorWeb.Pages
         public async Task OnGetAsync()
         {
             var currentUser =  _userIdAccessor.GetCurrentUserId();
-            //var currentUser = "03a7b561-c1c1-448e-924e-9d7ac13a1352";
             if (currentUser != null)
             {
                 CartItem = (await _context.GetAllCartItemUserIdAsync(currentUser)).ToList();
