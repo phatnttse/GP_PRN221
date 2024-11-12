@@ -52,12 +52,13 @@
                         _ => "text-dark"
                     };
 
-                    var amountText = log.Type switch
-                    {
-                        WalletLogTypeEnum.ADD or WalletLogTypeEnum.DEPOSIT => "+" + log.Amount.ToString("N0") + "₫",
-                        WalletLogTypeEnum.SUBTRACT or WalletLogTypeEnum.WITHDRAW => "-" + log.Amount.ToString("N0") + "₫",
-                        _ => log.Amount.ToString("N0") + "₫" 
-                    };
+                    var amountText = (log.Status == WalletLogStatusEnum.SUCCESS &&
+                    (log.Type == WalletLogTypeEnum.ADD || log.Type == WalletLogTypeEnum.DEPOSIT))
+                    ? "+" + log.Amount.ToString("N0") + "₫"
+                    : (log.Type == WalletLogTypeEnum.SUBTRACT || log.Type == WalletLogTypeEnum.WITHDRAW)
+                    ? "-" + log.Amount.ToString("N0") + "₫"
+                    : log.Amount.ToString("N0") + "₫";
+
                     <div class="transaction d-flex justify-content-between align-items-center p-3 mb-2 bg-light rounded shadow-sm">
                         <div class="t-details flex-grow-1 ms-3">
                             <div class="d-flex align-items-center">

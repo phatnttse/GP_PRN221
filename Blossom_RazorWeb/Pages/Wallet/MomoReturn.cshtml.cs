@@ -61,6 +61,11 @@ namespace Blossom_RazorWeb.Pages.Wallet
                     var newBalance = account.Balance += amount;
                     account.Balance = newBalance;
 
+                    if (account.Balance < 0)
+                    {
+                        account.Balance = 0;
+                    }
+
                     WalletLog walletLog = new WalletLog
                     {
                         UserId = accountId,
@@ -92,8 +97,7 @@ namespace Blossom_RazorWeb.Pages.Wallet
                             IsRefund = false,
                         };
 
-                        _walletLogService.Create(walletLog);
-                    
+                        _walletLogService.Create(walletLog);                
                 }
 
                 Response.Redirect("/Wallet");
