@@ -275,7 +275,7 @@
                 <div class="col-lg-6">
                     <ul class="header-page navbar-nav list-unstyled d-flex flex-row gap-3 gap-lg-5 justify-content-center flex-wrap align-items-center mb-0 fw-bold text-uppercase text-dark">
                         <li class="nav-item active">
-                            <a href="/" class="nav-link">Sản phẩm</a>
+                            <a asp-page="/Products" class="nav-link">Sản phẩm</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle pe-3" role="button" id="pages" data-bs-toggle="dropdown" aria-expanded="false">Trang</a>
@@ -308,11 +308,8 @@
                                 @{
                                     var avatar = Context.Session.GetString("Avatar");
                                 }
-
-                                @if (User.Identity != null && User.Identity.IsAuthenticated)
-                                {
-                    
-                                if (!string.IsNullOrEmpty(avatar))
+           
+                                @if (!string.IsNullOrEmpty(avatar))
                                     {
                                         <img src="@avatar" alt="User Avatar" width="24" height="24" style="border-radius: 50%;" />
                                     }
@@ -321,20 +318,11 @@
                                         <svg width="24" height="24">
                                             <use xlink:href="#user"></use>
                                         </svg>
-                                    }
-                                }
-                                else
-                                {
-                                    <svg width="24" height="24">
-                                        <use xlink:href="#user"></use>
-                                    </svg>
-                                }
-
-
+                                    }                            
                             </a>
                             <ul class="dropdown-menu border-0 p-3 rounded-0 shadow"
                                 aria-labelledby="users">
-                                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                                @if (!string.IsNullOrEmpty(avatar))
                                 {
                                     <li>
                                         <div routerLink="/profile"
