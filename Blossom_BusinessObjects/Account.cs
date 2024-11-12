@@ -1,6 +1,7 @@
 ﻿using Blossom_BusinessObjects.Entities.Enums;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Blossom_BusinessObjects.Entities
 {
@@ -12,9 +13,12 @@ namespace Blossom_BusinessObjects.Entities
 
         [EnumDataType(typeof(Gender))]
         public Gender Gender { get; set; }
-        public string Address { get; set; }
+        public String Address { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal Balance { get; set; }
 
         /// <summary>
         /// Navigation property for the roles this user belongs to.

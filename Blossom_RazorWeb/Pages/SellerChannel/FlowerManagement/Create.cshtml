@@ -4,54 +4,85 @@
     Layout = "_LayoutSellerChannel";
 }
 
-<form>
+<h2>Tạo sản phẩm mới</h2>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var errorMessage = '@Model.ErrorMessage';
+
+        if (errorMessage) {
+            toastr.error(errorMessage);
+        }
+    });
+</script>
+
+<form method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label for="uploadImage">Tải ảnh sản phẩm</label>
-        <input type="file" class="form-control-file" id="uploadImage" accept="image/*">
+        <label asp-for="UploadImage">Tải ảnh sản phẩm</label>
+        <input asp-for="UploadImage" type="file" class="form-control-file" accept="image/*">
+        <span asp-validation-for="UploadImage" class="text-danger"></span>
     </div>
 
     <div class="form-row">
         <div class="form-group col-md-6">
-            <label for="inputProductName">Tên sản phẩm</label>
-            <input type="text" class="form-control" id="inputProductName" placeholder="Tên sản phẩm">
+            <label asp-for="NewFlower.Name">Tên sản phẩm</label>
+            <input asp-for="NewFlower.Name" class="form-control" placeholder="Tên sản phẩm">
+            <span asp-validation-for="NewFlower.Name" class="text-danger"></span>
         </div>
         <div class="form-group col-md-6">
-            <label for="inputCategory">Danh mục</label>
-            <select id="inputCategory" class="form-control">
-                <option selected>Chọn danh mục...</option>
-                <option>...</option>
+            <label asp-for="NewFlower.FlowerCategoryId">Danh mục</label>
+            <select asp-for="NewFlower.FlowerCategoryId" class="form-control">
+                <option value="" selected>Chọn danh mục...</option>
+                @foreach(var category in Model.FlowerCategories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                })             
             </select>
-        </div>
-    </div>
-
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="inputPrice">Giá sản phẩm (VNĐ)</label>
-            <input type="text" class="form-control" id="inputPrice">
-        </div>
-        <div class="form-group col-md-6">
-            <label for="inputQuantity">Số lượng</label>
-            <input type="text" class="form-control" id="inputQuantity">
-        </div>
-    </div>
-
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="expirationDate">Ngày hết hạn</label>
-            <input type="datetime-local" class="form-control" id="expirationDate">
-        </div>
-        <div class="form-group col-md-6">
-            <label for="stopSaleDate">Ngày ngưng bán</label>
-            <input type="datetime-local" class="form-control" id="stopSaleDate">
+            <span asp-validation-for="NewFlower.FlowerCategoryId" class="text-danger"></span>
         </div>
     </div>
 
     <div class="form-group">
-        <label for="inputDescription">Mô tả</label>
-        <textarea rows="5" class="form-control" id="inputDescription" placeholder="Nhập mô tả chi tiết..."></textarea>
+        <label asp-for="NewFlower.Address">Địa chỉ</label>
+        <input asp-for="NewFlower.Address" class="form-control" placeholder="Địa chỉ">
+        <span asp-validation-for="NewFlower.Address" class="text-danger"></span>
     </div>
 
-    
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="NewFlower.Price">Giá sản phẩm (VNĐ)</label>
+            <input asp-for="NewFlower.Price" class="form-control">
+            <span asp-validation-for="NewFlower.Price" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="NewFlower.StockQuantity">Số lượng</label>
+            <input asp-for="NewFlower.StockQuantity" class="form-control">
+            <span asp-validation-for="NewFlower.StockQuantity" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="NewFlower.FlowerExpireDate">Ngày hết hạn</label>
+            <input asp-for="NewFlower.FlowerExpireDate" type="datetime-local" class="form-control">
+            <span asp-validation-for="NewFlower.FlowerExpireDate" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="NewFlower.ExpireDate">Ngày ngưng bán</label>
+            <input asp-for="NewFlower.ExpireDate" type="datetime-local" class="form-control">
+            <span asp-validation-for="NewFlower.ExpireDate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NewFlower.Description">Mô tả</label>
+        <textarea asp-for="NewFlower.Description" class="form-control" rows="5" placeholder="Nhập mô tả chi tiết..."></textarea>
+        <span asp-validation-for="NewFlower.Description" class="text-danger"></span>
+    </div>
 
     <button type="submit" class="btn btn-primary">Lưu</button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

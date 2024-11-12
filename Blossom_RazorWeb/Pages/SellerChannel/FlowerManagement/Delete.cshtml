@@ -1,4 +1,15 @@
 ﻿@page
 @model Blossom_RazorWeb.Pages.SellerChannel.FlowerManagement.DeleteModel
 @{
+    Layout = "_LayoutSellerChannel";
+
 }
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete {{@Model.Flower.Name}} ?</h3>
+
+<form method="post">
+    <input type="hidden" asp-for="Flower.Id" />
+    <input type="submit" value="Delete" class="btn btn-danger" /> |
+    <a asp-page="./Index">Back to List</a>
+</form>
