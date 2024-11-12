@@ -19,5 +19,7 @@ namespace Blossom_Repositories
         public Task<bool> AddFlower(Flower flower) => _flowerDAO.AddFlower(flower);
         public Task<bool> UpdateFlower(Flower flower) => _flowerDAO.UpdateFlower(flower);
         public Task<bool> DeleteFlower(string id) => _flowerDAO.DeleteFlower(id);
+        public Task<List<Flower>> GetFlowersBySeller(string sellerId) => _flowerDAO.GetFlowersBySeller(sellerId);
+
     }
 }

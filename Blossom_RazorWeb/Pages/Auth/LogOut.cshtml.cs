@@ -14,8 +14,9 @@ namespace Blossom_RazorWeb.Pages.Auth
         }
         public void OnGet()
         {
+            HttpContext.Session.Clear();
             _accountService.Logout();
-            Response.Redirect("/Index");
+            Response.Redirect("/Auth/Login");
         }
     }
 }
