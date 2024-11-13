@@ -1,23 +1,59 @@
-﻿body {
-}
+﻿<style >
 .section-order-history {
     padding-top: 3rem;
     padding-bottom: 4rem;
 }
 
 .track {
+    position: relative;
+    background-color: #ddd;
+    height: 7px;
     display: flex;
-    margin: 20px 0;
+    margin-bottom: 80px;
+    margin-top: 50px;
 }
 
     .track .step {
         flex-grow: 1;
+        width: 25%;
+        margin-top: -18px;
         text-align: center;
         position: relative;
     }
 
+        .track .step.active:before {
+            background: #148609;
+        }
+
+        .track .step.active-cancel:before {
+            background: #aa1906;
+        }
+
+        .track .step.active-refund:before {
+            background: #e0de42;
+        }
+
+        .track .step::before {
+            height: 7px;
+            position: absolute;
+            content: "";
+            width: 100%;
+            left: 0;
+            top: 18px;
+        }
+
         .track .step.active .icon {
             background: #148609;
+            color: #fff;
+        }
+
+        .track .step.active-cancel .icon {
+            background: #aa1906;
+            color: #fff;
+        }
+
+        .track .step.active-refund .icon {
+            background: #e0de42;
             color: #fff;
         }
 
@@ -26,8 +62,14 @@
         width: 40px;
         height: 40px;
         line-height: 40px;
+        position: relative;
+        border-radius: 100%;
         background: #ddd;
-        border-radius: 50%;
+    }
+
+    .track .step.active .text {
+        font-weight: 400;
+        color: #000;
     }
 
     .track .text {
@@ -35,8 +77,115 @@
         margin-top: 7px;
     }
 
+.itemside {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+    .itemside .aside {
+        position: relative;
+        flex-shrink: 0;
+    }
+
 .img-sm {
     width: 80px;
     height: 80px;
+    padding: 7px;
 }
 
+ul.row,
+ul.row-sm {
+    list-style: none;
+    padding: 0;
+}
+
+.itemside .info {
+    padding-left: 15px;
+    padding-right: 7px;
+}
+
+.itemside .title {
+    display: block;
+    margin-bottom: 0px;
+    color: #212529;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.btn-warning {
+    color: #ffffff;
+    background-color: #ee5435;
+    border-color: #ee5435;
+    border-radius: 1px;
+}
+
+    .btn-warning:hover {
+        color: #ffffff;
+        background-color: #ff2b00;
+        border-color: #ff2b00;
+        border-radius: 1px;
+    }
+
+.custom-track {
+    @media (max-width: 768px) {
+        font-size: 13px;
+    }
+
+    @media (max-width: 391px) {
+        font-size: 11px;
+    }
+}
+
+.col {
+    @media (max-width: 1024px) {
+        font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 13px;
+    }
+
+    @media (max-width: 390px) {
+        font-size: 11px;
+    }
+}
+
+.empty-order {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.empty-order-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: block;
+}
+
+.empty-order-message {
+    font-size: 20px;
+    color: #666;
+    margin-top: 10px;
+}
+
+.negative-margin {
+    margin-bottom: -20px;
+}
+
+@media (max-width: 768px) {
+    .negative-margin {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 1279px) {
+    .negative-margin {
+        margin-bottom: 0;
+    }
+}
+
+</style >

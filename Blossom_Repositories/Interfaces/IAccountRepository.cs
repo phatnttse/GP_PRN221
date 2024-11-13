@@ -11,6 +11,7 @@ namespace Blossom_Repositories.Interfaces
     public interface IAccountRepository
     {
         public Task<Account> GetAccount(string email);
+        public Task<List<Account>> GetAccounts();
         public Task<Account> GetAccountById(string id);
         public Task<bool> RegisterAccountAsync(string fullName, string email, string password, Gender gender);
         public Task<bool> Login(string email, string password);

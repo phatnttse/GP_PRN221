@@ -257,16 +257,24 @@
     <hr />
 
     <h5 class="mt-5">Add Your Feedback</h5>
-    <form method="post">
+    <form method="post" asp-page-handler="SubmitFeedback">
         <label>Rating:</label>
         <div>
             @for (int star = 1; star <= 5; star++)
             {
-                <input type="radio" id="star-@star" name="NewFeedback.Rating" value="@star" />
+                <input type="radio" id="star-@star" name="NewFeedback.Rating" value="@star" required />
                 <label for="star-@star">&#9733;</label>
             }
         </div>
-        <textarea name="NewFeedback.Description" class="form-control mb-3" rows="4" placeholder="Write your feedback..." required></textarea>
+        <span asp-validation-for="NewFeedback.Rating" class="text-danger"></span>
+        <div class="mb-3">
+            <textarea asp-for="NewFeedback.Description" class="form-control" rows="4" placeholder="Write your feedback..."></textarea>
+            <span asp-validation-for="NewFeedback.Description" class="text-danger"></span>
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

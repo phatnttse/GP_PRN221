@@ -4,6 +4,7 @@ using Blossom_BusinessObjects.Entities;
 using Blossom_Services.Interfaces;
 using Blossom_BusinessObjects;
 using Blossom_Services;
+using Blossom_RazorWeb.ViewModels;
 
 namespace Blossom_RazorWeb.Pages.Products
 {
@@ -12,14 +13,13 @@ namespace Blossom_RazorWeb.Pages.Products
         private readonly IFlowerService _flowerService;
         private readonly IFeedbackService _feedbackService;
         private readonly ICartItemService _cartItemService;
-        private readonly IUserIdAssessor _userIdAccessor;
-
+        private readonly IUserIdAssessor _userIdAssessor;
         public Flower Flower { get; set; }
         public Account SellerInfo { get; set; }
         public List<Feedback> ListFeedback { get; set; }
 
         [BindProperty]
-        public Feedback NewFeedback { get; set; }
+        public FeedbackViewModel NewFeedback { get; set; }
 
         //Seller
         public decimal SellerRatingAverage;
@@ -28,15 +28,15 @@ namespace Blossom_RazorWeb.Pages.Products
 
         public string ErrorMessage { get; set; }
 
-        public DetailsModel(IFlowerService flowerService, IFeedbackService feedbackService, ICartItemService cartItemService, IUserIdAssessor userIdAccessor)
+
+        public DetailsModel(IFlowerService flowerService, IFeedbackService feedbackService, IUserIdAssessor userIdAssessor)
         {
             _flowerService = flowerService;
             _feedbackService = feedbackService;
-            _cartItemService = cartItemService;
+            _userIdAssessor = userIdAssessor;
             SellerRatingAverage = 5;
             SellerRatingCount = 3;
             SellerProductCount = 10;
-            _userIdAccessor = userIdAccessor;
         }
 
         public async Task<IActionResult> OnGetAsync(string id)
@@ -56,12 +56,11 @@ namespace Blossom_RazorWeb.Pages.Products
             return Page();
         }
 
-
         public async Task<IActionResult> OnPostBuyNow(string flowerId)
         {
             try
             {
-                var currentUserId = _userIdAccessor.GetCurrentUserId();
+                var currentUserId = _userIdAssessor.GetCurrentUserId();
                 var submittedQuantity = Request.Form["Quantity"];
 
                 // Chuyển đổi từ chuỗi sang số nguyên nếu cần
@@ -108,7 +107,7 @@ namespace Blossom_RazorWeb.Pages.Products
         {
             try
             {
-                var currentUserId = _userIdAccessor.GetCurrentUserId();
+                var currentUserId = _userIdAssessor.GetCurrentUserId();
                 var submittedQuantity = Request.Form["Quantity"];
 
                 // Chuyển đổi từ chuỗi sang số nguyên nếu cần
@@ -129,7 +128,7 @@ namespace Blossom_RazorWeb.Pages.Products
 
                         await _cartItemService.AddFlowerListingToCart(currentUserId, flowerId, quantity);
                         return RedirectToPage("/CartItem");
-                                            
+
                     }
                     else
                     {
@@ -149,6 +148,40 @@ namespace Blossom_RazorWeb.Pages.Products
             {
                 return RedirectToPage();
             }
+        } 
+
+        public async Task<IActionResult> OnPostSubmitFeedbackAsync(string id)
+        {
+            var userId = _userIdAssessor.GetCurrentUserId();
+            if (userId == null)
+            {
+                TempData["NotPermissionMessage"] = "Authentication failed, please login to continue!";
+                return Redirect("/Auth/Login");
+            }
+            if (!ModelState.IsValid)
+            {
+                return RedirectToPage(new { id });
+            }
+
+            // Populate the feedback object with additional data
+            Feedback feedback = new Feedback()
+            {
+                FlowerId = id,
+                UserId = _userIdAssessor.GetCurrentUserId(),
+                Rating = NewFeedback.Rating,
+                Description = NewFeedback.Description,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+            };
+
+            // Save feedback to the database
+            await _feedbackService.AddFeedbackAsync(feedback);
+
+            // Reload feedback list to reflect the new feedback
+            ListFeedback = await _feedbackService.GetFeedbackByFlowerIdAsync(id);
+
+            TempData["Message"] = "Thank you for your feedback!";
+            return RedirectToPage(new { id });
         }
     }
 }

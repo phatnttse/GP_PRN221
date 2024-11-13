@@ -1,0 +1,40 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.Admin.AccountManagement.IndexModel
+@{
+    Layout = "_LayoutAdmin";
+}
+<h2>Account Management</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Address</th>
+            <th>Balance</th>
+            <th>Avatar</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var account in Model.Accounts)
+        {
+            <tr>
+                <td>@account.UserName</td>
+                <td>@account.FullName</td>
+                <td>@account.Email</td>
+                <td>@account.Gender</td>
+                <td>@account.Address</td>
+                <td>@account.Balance.ToString("C")</td>
+                <td><img src="@account.Avatar" alt="Avatar" width="50" /></td>
+                <td>@(account.IsBanned ? "Banned" : "Active")</td>
+                <td>
+                    <a href="/Admin/AccountManagement/Details?id=@account.Id" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

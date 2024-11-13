@@ -3,21 +3,8 @@
 @model Blossom_RazorWeb.Pages.OrderHistory.OrderHistoryModel
 @{
 }
-@if (TempData["Error"] != null)
-{
-    <script type="text/javascript">
-        toastr.error('@TempData["Error"]');
-    </script>
-}
-@if (TempData["Success"] != null)
-{
-    <script type="text/javascript">
-        toastr.success('@TempData["Success"]');
-    </script>
-}
-<!DOCTYPE html>
-<html lang="en">
 
+<<<<<<< HEAD
 <head>
     <meta charset="utf-8">
     <title>Fruitables - Vegetable Website Template</title>
@@ -81,7 +68,15 @@
 
 
     <section class="container section-order-history" style="padding: 3rem 0">
+=======
+    <section class="container section-order-history">
+>>>>>>> d82d84ced369943c45e9ed44a839390129804bda
         <div class="order-history">
+            <!-- Tab -->
+            <div class="tabs">
+                <div class="tab">Đơn hàng (1)</div>
+                <div class="tab">Đơn hàng khác (0)</div>
+            </div>
 
             <!-- Order Card -->
             <article class="card mt-5">
@@ -130,48 +125,102 @@
                             </div>
                         </div>
 
+                       <!-- Tracking Steps -->
                         <!-- Tracking Steps -->
-                        <div class="track text-black">
-                            <div class="step active">
-                                @if (item.Status == OrderDetailStatus.PENDING)
-                                {
-                                    <span class="icon"> <i class="fa fa-check"></i> </span>
-                                    <span class="text">ĐANG CHUẨN BỊ HÀNG</span>
-                                }
-                                @if (item.Status == OrderDetailStatus.SHIPPED)
-                                {
-                                    <span class="icon"> <i class="fa fa-check"></i> </span>
-                                    <span class="text">ĐANG VẬN CHUYỂN TỚI BẠN</span>
-                                }
-                                @if (item.Status == OrderDetailStatus.CANCELED)
-                                {
-                                    <span class="icon"> <i class="fa fa-times-circle"></i> </span>
-                                    <span class="text">ĐÃ HỦY</span>
-                                }
+<div class="track text-black">
+    
+
+    @if ((int)item.Status == 0)
+    {
+                            <!-- Trạng thái Chờ xử lý -->
+                            <div class="step @((int)item.Status >= 0 ? "active green" : "")">
+                                <span class="icon"> <i class="fa fa-hourglass-start"></i> </span>
+                                <span class="text">Chờ xử lý</span>
                             </div>
-                        </div>
-                        @if (item.Status == OrderDetailStatus.PENDING)
-                        {
-                            <!-- Buttons -->
-                            <div class="d-flex justify-content-center align-items-center">
-                                <div style="padding:10px">
-                                    <form method="post" asp-page-handler="CancelOrder">
-                                        <input type="hidden" name="orderDetailId" value="@item.Id" />
-                                        <button type="submit" class="btn btn-danger">Huỷ đơn hàng</button>
-                                    </form>
-                                </div>
-                                
-                            </div>
-                        }
-                        @if (item.Status == OrderDetailStatus.SHIPPED)
-                        {
-                            <div style="padding:10px">
-                                <form method="post" asp-page-handler="DeliveredOrder">
-                                    <input type="hidden" name="DeliveredOrder" value="@item.Id" />
-                                    <button type="submit" class="btn btn-success">Xác nhận đã nhận hàng</button>
+                            <div class="connector @((int)item.Status >= 0 ? "active" : "")"></div>
+        <div class="step @((int)item.Status >= 1 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-cogs"></i> </span>
+            <span class="text">Đang chuẩn bị</span>
+        </div>
+
+        <div class="step @((int)item.Status >= 2 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-truck"></i> </span>
+            <span class="text">Đang giao</span>
+        </div>
+        <div class="step @((int)item.Status >= 3 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-check"></i> </span>
+            <span class="text">Đã nhận hàng</span>
+        </div>
+        <div class="step @((int)item.Status == 4 ? "active red" : "")">
+            <span class="icon"> <i class="fa fa-times-circle"></i> </span>
+            <span class="text">Đã hủy</span>
+        </div>
+        <div class="step @((int)item.Status == 6 ? "active blue" : "")">
+            <span class="icon"> <i class="fa fa-sync-alt"></i> </span>
+            <span class="text">Hoàn tiền</span>
+        </div>
+    }
+    @if ((int)item.Status == 4)
+    {
+        <div class="step @((int)item.Status >= 0 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-hourglass-start"></i> </span>
+            <span class="text">Chờ xử lý</span>
+        </div>
+        <div class="connector @((int)item.Status >= 0 ? "active" : "")"></div>
+        <div class="step @((int)item.Status == 4 ? "active red" : "")">
+            <span class="icon"> <i class="fa fa-times-circle"></i> </span>
+            <span class="text">Đã hủy</span>
+        </div>
+        <div class="step @((int)item.Status == 6 ? "active blue" : "")">
+            <span class="icon"> <i class="fa fa-sync-alt"></i> </span>
+            <span class="text">Hoàn tiền</span>
+        </div>
+    }
+    @if ((int)item.Status > 0 && (int)item.Status < 4 || (int)item.Status == 5)
+    {
+        <div class="step @((int)item.Status >= 0 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-hourglass-start"></i> </span>
+            <span class="text">Chờ xử lý</span>
+        </div>
+        <div class="connector @((int)item.Status >= 0 ? "active" : "")"></div>
+        <div class="step @((int)item.Status >= 1 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-cogs"></i> </span>
+            <span class="text">Đang chuẩn bị</span>
+        </div>
+        <div class="connector @((int)item.Status >= 1 ? "active" : "")"></div>
+        <div class="step @((int)item.Status >= 2 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-truck"></i> </span>
+            <span class="text">Đang giao</span>
+        </div>
+        <div class="connector @((int)item.Status >= 2 ? "active" : "")"></div>
+        <div class="step @((int)item.Status >= 3 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-check"></i> </span>
+            <span class="text">Đã nhận hàng</span>
+        </div>
+    }
+</div>
+
+
+
+
+
+                        <div class="d-flex justify-content-center align-items-center">
+                            @if((int)item.Status == 0)
+                            {
+                                <form method="post" asp-page-handler="CancelStatus">
+                                    <input type="hidden" name="orderDetailId" value="@item.Id" />
+                                    <button class="btn btn-danger mt-4">Huỷ đơn hàng</button>
                                 </form>
-                            </div>
-                        }
+                                
+                            }
+                            @if((int)item.Status == 2)
+                            {
+                                <form method="post" asp-page-handler="ConfirmedReceipt" asp-route-Id="@item.Id">
+                                    <input type="hidden" name="orderDetailId" value="@item.Id" />
+                                    <button class="btn btn-success mt-4">Xác nhận đã nhận hàng</button>
+                                </form>
+                            }
+                        </div>
                     </div>
                 }
             </article>
@@ -197,4 +246,3 @@
         </div>
     </section>
 
-</body>
