@@ -60,7 +60,7 @@ namespace Blossom_Services
             var existingUser = _userIdAssessor.GetCurrentUserId();
             if (existingUser != null)
             {
-                var orderDetail = _orderDetailRepository.GetOrderDetailsById(username);
+                var orderDetail = _orderDetailRepository.GetOrderDetailsBySellerId(username);
                 return orderDetail.ToList() ?? new List<OrderDetail>();
             }
             return new List<OrderDetail>();
