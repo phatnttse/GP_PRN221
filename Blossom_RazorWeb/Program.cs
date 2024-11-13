@@ -1,6 +1,7 @@
 using Blossom_BusinessObjects.Configurations;
 using Blossom_BusinessObjects.Entities;
 using Blossom_DAOs;
+using Blossom_RazorWeb.Controllers;
 using Blossom_Repositories;
 using Blossom_Repositories.Interfaces;
 using Blossom_Services;
@@ -71,11 +72,12 @@ namespace Blossom_RazorWeb
             builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();
             builder.Services.AddScoped<ICartItemRepository, CartItemRepository>(); 
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IFlowerService, FlowerService>();
             builder.Services.AddScoped<IFlowerCategoryService, FlowerCategoryService>();
             builder.Services.AddScoped<IFeedbackService, FeedbackService>();
-
+            builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<OrderDAO>();
             builder.Services.AddScoped<OrderDetailDAO>();
             builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
@@ -90,6 +92,7 @@ namespace Blossom_RazorWeb
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddHttpClient();
             builder.Services.AddScoped<EmailSender>();
+            builder.Services.AddScoped<NotificationController>();
 
             // Add services to the container.
             builder.Services.AddRazorPages();
@@ -106,7 +109,7 @@ namespace Blossom_RazorWeb
                 app.UseHsts();
             }
 
-
+            app.MapControllers();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
