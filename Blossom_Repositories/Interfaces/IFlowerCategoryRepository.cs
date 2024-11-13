@@ -15,5 +15,6 @@ namespace Blossom_Repositories.Interfaces
         public Task<bool> AddFlowerCategory(FlowerCategory flower);
         public Task<bool> UpdateFlowerCategory(FlowerCategory flower);
         public Task<bool> DeleteFlowerCategory(string id);
+        public Task<bool> RestoreFlowerCategory(string id);
     }
 }

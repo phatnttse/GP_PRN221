@@ -23,5 +23,6 @@ namespace Blossom_Repositories
         public Task<bool> AddFlowerCategory(FlowerCategory flower) => _flowerDAO.AddFlowerCategory(flower);
         public Task<bool> UpdateFlowerCategory(FlowerCategory flower) => _flowerDAO.UpdateFlowerCategory(flower);
         public Task<bool> DeleteFlowerCategory(string id) => _flowerDAO.DeleteFlower(id);
+        public Task<bool> RestoreFlowerCategory(string id) => _flowerDAO.RestoreFlower(id);
     }
 }

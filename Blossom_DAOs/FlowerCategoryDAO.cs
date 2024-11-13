@@ -29,7 +29,7 @@ namespace Blossom_DAOs
 
             if (flower == null)
             {
-                throw new Exception("Flower not found");
+                throw new Exception("Flower category not found");
             }
 
             return Task.FromResult(flower);
@@ -54,9 +54,23 @@ namespace Blossom_DAOs
             var flower = _context.FlowerCategories.FirstOrDefault(f => f.Id == id);
             if (flower == null)
             {
-                throw new Exception("Flower not found");
+                throw new Exception("Flower category not found");
             }
-            _context.FlowerCategories.Remove(flower);
+            flower.IsDeleted = true;
+            _context.FlowerCategories.Update(flower);
+            _context.SaveChanges();
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> RestoreFlower(string id)
+        {
+            var flower = _context.FlowerCategories.FirstOrDefault(f => f.Id == id);
+            if (flower == null)
+            {
+                throw new Exception("Flower category not found");
+            }
+            flower.IsDeleted = false;
+            _context.FlowerCategories.Update(flower);
             _context.SaveChanges();
             return Task.FromResult(true);
         }

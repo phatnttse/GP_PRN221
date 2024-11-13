@@ -23,5 +23,6 @@ namespace Blossom_Services
         public Task<bool> AddFlowerCategory(FlowerCategory flower) => _flowerRepository.AddFlowerCategory(flower);
         public Task<bool> UpdateFlowerCategory(FlowerCategory flower) => _flowerRepository.UpdateFlowerCategory(flower);
         public Task<bool> DeleteFlowerCategory(string id) => _flowerRepository.DeleteFlowerCategory(id);
+        public Task<bool> RestoreFlowerCategory(string id) => _flowerRepository.RestoreFlowerCategory(id);
     }
 }

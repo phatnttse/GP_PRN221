@@ -3,6 +3,7 @@ using Blossom_BusinessObjects.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,7 +92,25 @@ namespace Blossom_DAOs
             {
                 throw new Exception("Flower not found");
             }
-            _context.Flowers.Remove(flower);
+
+            flower.IsDeleted = true;
+
+            _context.Flowers.Update(flower);
+            _context.SaveChanges();
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> RestoreFlower(string id)
+        {
+            var flower = _context.Flowers.FirstOrDefault(f => f.Id == id);
+            if (flower == null)
+            {
+                throw new Exception("Flower not found");
+            }
+
+            flower.IsDeleted = false;
+
+            _context.Flowers.Update(flower);
             _context.SaveChanges();
             return Task.FromResult(true);
         }
