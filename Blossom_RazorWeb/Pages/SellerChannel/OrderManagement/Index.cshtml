@@ -1,0 +1,57 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.SellerChannel.OrderManagement.IndexModel
+@{
+    Layout = "_LayoutSellerChannel";
+}
+
+@if (TempData["SuccessStatusMessage"] != null)
+{
+    <script type="text/javascript">
+        toastr.success('@TempData["SuccessStatusMessage"]');
+    </script>
+}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">
+                    Người đặt
+                </th>
+                <th scope="col">
+                    SĐT
+                </th>
+                <th scope="col">Sản phẩm</th>
+                <th scope="col">
+                    Tổng tiền
+                </th>
+                <th scope="col">Ngày đặt hàng</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach(var item in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@item.Order.BuyerName</td>
+                    <td>@item.Order.BuyerPhone</td>
+                    <td>@item.Flower.Name</td>
+                    <td>@item.Order.TotalPrice VND</td>
+                    <td>@item.Order.CreatedAt.ToString("dd/MM/yyyy")</td>
+                    <td class="fw-bold">
+                        <span class="">
+                            @item.Status
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/SellerChannel/OrderManagement/Details?id=@item.Id" type="button" class="btn btn-primary">
+                            Chỉnh sửa
+                        </a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

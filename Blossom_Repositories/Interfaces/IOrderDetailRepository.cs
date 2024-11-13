@@ -16,5 +16,8 @@ namespace Blossom_Repositories.Interfaces
         bool DeleteOrderDetail(string id);
 
         List<OrderDetail> GetOrderDetailsById(string username);
+        List<OrderDetail> GetOrderDetailsBySellerId(string username);
+
+        bool UpdateOrderStatusByOrderDetailId(string orderDetailId, int status);
     }
 }

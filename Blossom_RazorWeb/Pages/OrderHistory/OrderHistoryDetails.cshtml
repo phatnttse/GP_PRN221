@@ -6,7 +6,7 @@
 @if (TempData["Error"] != null)
 {
     <script type="text/javascript">
-        toastr.warning('@TempData["Error"]');
+        toastr.error('@TempData["Error"]');
     </script>
 }
 @if (TempData["Success"] != null)
