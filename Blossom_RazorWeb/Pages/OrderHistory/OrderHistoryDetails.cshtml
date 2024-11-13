@@ -4,7 +4,6 @@
 @{
 }
 
-<<<<<<< HEAD
 <head>
     <meta charset="utf-8">
     <title>Fruitables - Vegetable Website Template</title>
@@ -68,20 +67,13 @@
 
 
     <section class="container section-order-history" style="padding: 3rem 0">
-=======
-    <section class="container section-order-history">
->>>>>>> d82d84ced369943c45e9ed44a839390129804bda
         <div class="order-history">
-            <!-- Tab -->
-            <div class="tabs">
-                <div class="tab">Đơn hàng (1)</div>
-                <div class="tab">Đơn hàng khác (0)</div>
-            </div>
-
+       
             <!-- Order Card -->
-            <article class="card mt-5">
-                @foreach(var item in Model.OrderDetails)
+               @foreach(var item in Model.OrderDetails)
                 {
+            <article class="card mt-5">
+             
                     <div class="card-body">
                         <h6 class="mb-4">
                             <span class="fw-bold text-black">Mã đơn hàng:</span>
@@ -222,8 +214,9 @@
                             }
                         </div>
                     </div>
-                }
+                
             </article>
+                }
             
         </div>
         <div style="margin-top: 10px">
@@ -246,3 +239,4 @@
         </div>
     </section>
 
+    </body>
