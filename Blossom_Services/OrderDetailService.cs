@@ -1,10 +1,12 @@
-﻿using Blossom_BusinessObjects.Entities;
+﻿using Blossom_BusinessObjects;
+using Blossom_BusinessObjects.Entities;
 using Blossom_Repositories;
 using Blossom_Repositories.Interfaces;
 using Blossom_Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -97,6 +99,26 @@ namespace Blossom_Services
                 return _orderDetailRepository.GetTotalFlowerViewsAsync(startDate, endDate, existingUser);
             }
             return 0;
+        }
+
+        public List<DateTime> GetDateRangeList(DateTime startDate, DateTime endDate)
+        {
+            var existingUser = _userIdAssessor?.GetCurrentUserId();
+            if (existingUser != null)
+            {
+                return _orderDetailRepository.GetDateRangeList(startDate, endDate);
+            }
+            return new List<DateTime>();
+        }
+
+        public List<RevenueByDate> GetDailyRevenueAsync(DateTime startDate, DateTime endDate)
+        {
+            var existingUser = _userIdAssessor?.GetCurrentUserId();
+            if (existingUser != null)
+            {
+                return _orderDetailRepository.GetDailyRevenueAsync(startDate, endDate, existingUser);
+            }
+            return new List<RevenueByDate>();
         }
     }
 }

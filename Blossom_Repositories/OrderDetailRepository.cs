@@ -1,4 +1,5 @@
-﻿using Blossom_BusinessObjects.Entities;
+﻿using Blossom_BusinessObjects;
+using Blossom_BusinessObjects.Entities;
 using Blossom_DAOs;
 using Blossom_Repositories.Interfaces;
 using System;
@@ -52,5 +53,9 @@ namespace Blossom_Repositories
         public int GetTotalOrdersCountAsync(DateTime startDate, DateTime endDate, string userId) => _orderDetailDAO.GetTotalOrdersCountAsync(startDate, endDate, userId).Result;
 
         public int GetTotalFlowerViewsAsync(DateTime startDate, DateTime endDate, string userId) => _orderDetailDAO.GetTotalFlowerViewsAsync(startDate, endDate, userId).Result;
+
+        public List<DateTime> GetDateRangeList(DateTime startDate, DateTime endDate) => _orderDetailDAO.GetDateRangeList(startDate, endDate);
+
+        public List<RevenueByDate> GetDailyRevenueAsync(DateTime startDate, DateTime endDate, string userId) => _orderDetailDAO.GetDailyRevenueAsync(startDate, endDate, userId).Result;
     }
 }

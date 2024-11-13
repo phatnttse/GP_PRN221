@@ -1,4 +1,5 @@
-﻿using Blossom_BusinessObjects.Entities;
+﻿using Blossom_BusinessObjects;
+using Blossom_BusinessObjects.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -155,7 +156,33 @@ namespace Blossom_DAOs
 
             return dateList;
         }
-        
+
+        public async Task<List<RevenueByDate>> GetDailyRevenueAsync(DateTime startDate, DateTime endDate, string userId)
+        {
+            var allDates = GetDateRangeList(startDate, endDate);
+
+            var dailyRevenue = await _context.Set<OrderDetail>()
+                .Where(o => o.CreatedAt >= startDate && o.CreatedAt <= endDate && o.Flower.SellerId.Equals(userId) && !o.IsDeleted)
+                .GroupBy(o => o.CreatedAt.Date) 
+                .Select(g => new RevenueByDate
+                {
+                    Date = g.Key,
+                    TotalRevenue = g.Sum(o => o.Order.TotalPrice)
+                })
+                .ToListAsync();
+
+            var result = allDates.Select(date =>
+            {
+                var revenue = dailyRevenue.FirstOrDefault(r => r.Date.Date == date.Date);
+                return new RevenueByDate
+                {
+                    Date = date,
+                    TotalRevenue = revenue != null ? revenue.TotalRevenue : 0 
+                };
+            }).ToList();
+
+            return result;
+        }
 
     }
 }

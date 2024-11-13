@@ -303,44 +303,43 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/app.min.js"></script>
     <script src="~/js/vendors.min.js"></script>
+
     <script>
+
         var revenueData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["RevenueData"]));
 
-        // Tạo nhãn và dữ liệu từ revenueData
-        const labels = revenueData.map(item => item.Date);  // Lấy danh sách ngày
-        const data = revenueData.map(item => item.Amount);  // Lấy danh sách doanh thu
-        // Lấy context của canvas
+        const labels = revenueData.map(item => item.Date);  
+
+        
+        const data = revenueData.map(item => item.TotalRevenue);  
+
         const ctx = document.getElementById('revenue-chart').getContext('2d');
 
-        // Dữ liệu cứng cho biểu đồ (sau này sẽ thay thế bằng dữ liệu động)
         const revenueChart = new Chart(ctx, {
-            type: 'line', // Loại biểu đồ là line chart
+            type: 'line', 
             data: {
-                // Labels (trục X) - sẽ được thay thế sau bằng dữ liệu động
                 labels: labels,
 
-                // Datasets (dữ liệu cho biểu đồ)
                 datasets: [{
                     label: 'Doanh thu',
-                    // Dữ liệu doanh thu giả định cho mỗi ngày
                     data: data,
-                    borderColor: 'rgba(75, 192, 192, 1)', // Màu sắc của đường
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Màu nền của đường
-                    fill: false, // Bỏ đổ màu dưới đường (chuyển từ miền sang đường)
-                    tension: 0.4 // Cắt góc nhẹ cho đường
+                    borderColor: 'rgba(75, 192, 192, 1)', 
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', 
+                    fill: false, 
+                    tension: 0.4 
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
                     y: {
-                        beginAtZero: true, // Bắt đầu trục Y từ 0
+                        beginAtZero: true,
                     }
                 }
             }
         });
-
     </script>
+
 
    
     @await RenderSectionAsync("Scripts", required: false)
