@@ -1,6 +1,7 @@
 ﻿using Blossom_BusinessObjects.Entities;
 using Blossom_BusinessObjects.Entities.Enums;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace Blossom_DAOs
 {
@@ -65,6 +66,11 @@ namespace Blossom_DAOs
                 throw new KeyNotFoundException($"Không tìm thấy tài khoản với email: {email}");
             }
 
+            if (account.LockoutEnabled && account.LockoutEnd.HasValue && account.LockoutEnd.Value > DateTimeOffset.UtcNow)
+            {
+                throw new UnauthorizedAccessException("Tài khoản của bạn đã bị khóa.");
+            }
+
             var result = await _signInManager.PasswordSignInAsync(account, password, false, lockoutOnFailure: false);
 
             if (result.Succeeded)
@@ -105,7 +111,7 @@ namespace Blossom_DAOs
                 throw new Exception($"Đăng ký thất bại: {errors}");
             }
 
-            var defaultRole = RoleName.USER.ToString();
+            var defaultRole = RoleName.ADMIN.ToString();
 
             if (!await _roleManager.RoleExistsAsync(defaultRole))
             {
@@ -145,6 +151,10 @@ namespace Blossom_DAOs
             }
 
             return account;
+        }
+        public async Task<List<Account>> GetAccounts()
+        {
+            return _userManager.Users.ToList();
         }
     }
 }

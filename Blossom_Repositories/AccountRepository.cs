@@ -29,6 +29,6 @@ namespace Blossom_Repositories
         public Task<List<string>> GetRoles(Account account) => _accountDAO.GetRoles(account);
         public Task<Account> UpdateAccount(Account account) => _accountDAO.UpdateAccount(account);
 
-
+        public Task<List<Account>> GetAccounts() => _accountDAO.GetAccounts();
     }
 }
