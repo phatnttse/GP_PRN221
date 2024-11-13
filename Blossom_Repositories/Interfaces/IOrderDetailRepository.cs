@@ -19,5 +19,9 @@ namespace Blossom_Repositories.Interfaces
         List<OrderDetail> GetOrderDetailsBySellerId(string username);
 
         bool UpdateOrderStatusByOrderDetailId(string orderDetailId, int status);
+
+        decimal GetTotalRevenueAsync(DateTime startDate, DateTime endDate, string userId);
+        int GetTotalOrdersCountAsync(DateTime startDate, DateTime endDate, string userId);
+        int GetTotalFlowerViewsAsync(DateTime startDate, DateTime endDate, string userId);
     }
 }

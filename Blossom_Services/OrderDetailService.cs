@@ -1,4 +1,5 @@
 ﻿using Blossom_BusinessObjects.Entities;
+using Blossom_Repositories;
 using Blossom_Repositories.Interfaces;
 using Blossom_Services.Interfaces;
 using System;
@@ -68,5 +69,34 @@ namespace Blossom_Services
 
         public bool UpdateOrderStatusByOrderDetailId(string orderDetailId, int status) => _orderDetailRepository.UpdateOrderStatusByOrderDetailId(orderDetailId, status);
 
+        public decimal GetTotalRevenueAsync(DateTime startDate, DateTime endDate)
+        {
+            var existingUser = _userIdAssessor?.GetCurrentUserId();
+            if (existingUser != null)
+            {
+                return _orderDetailRepository.GetTotalRevenueAsync(startDate, endDate, existingUser);
+            }
+            return 0;
+        }
+
+        public int GetTotalOrdersCountAsync(DateTime startDate, DateTime endDate)
+        {
+            var existingUser = _userIdAssessor?.GetCurrentUserId();
+            if (existingUser != null)
+            {
+                return _orderDetailRepository.GetTotalOrdersCountAsync(startDate, endDate, existingUser);
+            }
+            return 0;
+        }
+
+        public int GetTotalFlowerViewsAsync(DateTime startDate, DateTime endDate)
+        {
+            var existingUser = _userIdAssessor?.GetCurrentUserId();
+            if (existingUser != null)
+            {
+                return _orderDetailRepository.GetTotalFlowerViewsAsync(startDate, endDate, existingUser);
+            }
+            return 0;
+        }
     }
 }

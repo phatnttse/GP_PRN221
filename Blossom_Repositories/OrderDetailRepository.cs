@@ -46,5 +46,11 @@ namespace Blossom_Repositories
         public List<OrderDetail> GetOrderDetailsBySellerId(string username) => _orderDetailDAO.GetOrderDetailsBySellerId(username).Result;
 
         public bool UpdateOrderStatusByOrderDetailId(string orderDetailId, int status) => _orderDetailDAO.UpdateOrderStatusByOrderDetailId(orderDetailId, status).Result;
+
+        public decimal GetTotalRevenueAsync(DateTime startDate, DateTime endDate, string userId) => _orderDetailDAO.GetTotalRevenueAsync(startDate, endDate, userId).Result;
+
+        public int GetTotalOrdersCountAsync(DateTime startDate, DateTime endDate, string userId) => _orderDetailDAO.GetTotalOrdersCountAsync(startDate, endDate, userId).Result;
+
+        public int GetTotalFlowerViewsAsync(DateTime startDate, DateTime endDate, string userId) => _orderDetailDAO.GetTotalFlowerViewsAsync(startDate, endDate, userId).Result;
     }
 }

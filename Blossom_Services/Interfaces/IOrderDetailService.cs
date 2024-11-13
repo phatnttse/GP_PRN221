@@ -20,5 +20,10 @@ namespace Blossom_Services.Interfaces
 
         bool UpdateOrderStatusByOrderDetailId(string orderDetailId, int status);
 
+        decimal GetTotalRevenueAsync(DateTime startDate, DateTime endDate);
+
+        int GetTotalOrdersCountAsync(DateTime startDate, DateTime endDate);
+
+        int GetTotalFlowerViewsAsync(DateTime startDate, DateTime endDate);
     }
 }
