@@ -19,6 +19,7 @@ namespace Blossom_RazorWeb.Pages
         private readonly ICartItemService _cartItemService;
         private readonly IAccountService _accountService;
         private readonly IWalletLogService _walletLogService;
+        private readonly IUserIdAssessor _userIdAssessor;
 
         public OrderModel(
             ICartItemService cartItemService,
@@ -26,7 +27,8 @@ namespace Blossom_RazorWeb.Pages
             IOrderService orderService,
             IOrderDetailService orderDetailService,
             IFlowerService flowerService,
-            IWalletLogService walletLogService
+            IWalletLogService walletLogService,
+            IUserIdAssessor userIdAssessor
         )
         {
             _cartItemService = cartItemService;
@@ -35,6 +37,7 @@ namespace Blossom_RazorWeb.Pages
             _orderDetailService = orderDetailService;
             _flowerService = flowerService;
             _walletLogService = walletLogService;
+            _userIdAssessor = userIdAssessor;
         }
 
         [BindProperty]
@@ -54,13 +57,12 @@ namespace Blossom_RazorWeb.Pages
         // GET method to initialize data
         public async Task<IActionResult> OnGetAsync()
         {
-            var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            if (userEmail == null)
+            var userId = _userIdAssessor.GetCurrentUserId();
+            if (userId == null)
             {
                 TempData["Error"] = "You do not have permission to do this function!";
                 return RedirectToPage("/Auth/Login");
             }
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!string.IsNullOrEmpty(userId))
             {
                 
@@ -96,7 +98,7 @@ namespace Blossom_RazorWeb.Pages
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = _userIdAssessor.GetCurrentUserId();
                 if (string.IsNullOrEmpty(userId))
                 {
                     ModelState.AddModelError("", "User is not authenticated");
@@ -187,7 +189,7 @@ namespace Blossom_RazorWeb.Pages
                             if (user.Balance.CompareTo(calAmountForUser) < 0)
                             {
                                 TempData["Error"] = "Số dư hiện tại của bạn không đủ, vui lòng nạp thêm!";
-                                return Page();
+                                return RedirectToPage();
                             }
 
                             user.Balance = user.Balance - calAmountForUser;

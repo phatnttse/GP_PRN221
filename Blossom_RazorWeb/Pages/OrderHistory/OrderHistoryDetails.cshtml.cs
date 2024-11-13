@@ -78,7 +78,7 @@ namespace Blossom_RazorWeb.Pages.OrderHistory
 
 
                     decimal feeService = 5 / 100;
-                    decimal calAmountForUser = orderDetail.Price;
+                    decimal calAmountForUser = orderDetail.Price * orderDetail.Quantity;
                     decimal calAmoutnForSeller = calAmountForUser * feeService;
                     //handle balance for user
                     user.Balance = user.Balance + calAmountForUser;

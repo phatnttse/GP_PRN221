@@ -34,7 +34,7 @@
     </div>
 </section>
 
-    @if (Model.CartItem != null)
+    @if (Model.CartItem.Count() > 0)
     {
         <div class="container-fluid py-5">
             <div class="container py-5">
@@ -125,11 +125,11 @@
                                 <p>Nhấn nút dưới đây để xoá giỏ hàng</p>
                             </div>
                             <div class="col-md-12">
-                                <button type="button"
-                                        class="btn btn-danger"
-                                        >
+                            <form method="post" asp-page-handler="ClearCart">
+                                <button class="btn btn-danger">
                                     Xóa giỏ hàng
                                 </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
                                         <span class="text-black">Tạm tính</span>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <strong class="text-black">200.000₫</strong>
+                                    <strong class="text-black">@(Convert.ToDecimal(Model.TotalPrice).ToString("N0"))₫</strong>
                                     </div>
                                 </div>
                                 <div class="row mb-5">
@@ -154,7 +154,7 @@
                                         <span class="text-black">Tổng cộng</span>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <strong class="text-black">200.000₫</strong>
+                                    <strong class="text-black">@(Convert.ToDecimal(Model.TotalPrice).ToString("N0"))₫</strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -171,5 +171,24 @@
                     </div>
                 </div>
             </div>
+    </div>
+} else
+{
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <span class="icon-shopping-cart h1 d-block"></span>
+                <img class="mb-5"
+                     width="160"
+                     src="/assets/images/empty-cart-svg.svg"
+                     alt="" />
+                <h4 class="text-black mb-5">Your cart is currently empty.</h4>
+                    <a asp-page="/Products/Index" style="font-size: 16px"
+                            class="primary-color btn btn-danger"
+                            >
+                        Return to shop
+                    </a>
+            </div>
         </div>
-    }
+    </div>
+}

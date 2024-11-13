@@ -96,12 +96,14 @@
                                         <span class="text-dark fs-5 fw-semibold">@flower.Price.ToString("N0")₫</span>
                                     </div>
                                     <div class="button-area p-3 pt-0">
-                                        <a href="javascript:;" class="btn btn-primary rounded-1 p-2 fs-7 fw-bold btn-cart" onclick="addToCart(@flower.Id, 1)">
+                                        <form method="post" asp-page-handler="AddToCart">
+                                            <button type="submit" name="flowerId" value="@flower.Id" class="btn btn-primary rounded-1 p-2 fs-7 fw-bold btn-cart">
                                             <div class="d-flex align-items-center justify-content-center gap-1">
-                                                <svg width="28" height="28"><use xlink:href="#cart"></use></svg>
+                                                <svg width="24" height="24"><use xlink:href="#cart"></use></svg>
                                                 Add to cart
                                             </div>
-                                        </a>
+                                        </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
