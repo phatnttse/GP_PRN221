@@ -60,66 +60,94 @@
                         </div>
 
                        <!-- Tracking Steps -->
+                        <!-- Tracking Steps -->
 <div class="track text-black">
-    <!-- Chờ xử lý -->
-    <div class="step @((int)item.Status >= 0 ? "active green" : "")">
-        <span class="icon"> <i class="fa fa-hourglass-start"></i> </span>
-        <span class="text">Chờ xử lý</span>
-    </div>
-                            <div class="connector @((int)item.Status >= 0 ? "active" : "")"></div>
+    
 
-    @if ((int)item.Status == 1 || (int)item.Status == 2) 
+    @if ((int)item.Status == 0)
     {
-        <!-- Đang chuẩn bị -->
+                            <!-- Trạng thái Chờ xử lý -->
+                            <div class="step @((int)item.Status >= 0 ? "active green" : "")">
+                                <span class="icon"> <i class="fa fa-hourglass-start"></i> </span>
+                                <span class="text">Chờ xử lý</span>
+                            </div>
+                            <div class="connector @((int)item.Status >= 0 ? "active" : "")"></div>
         <div class="step @((int)item.Status >= 1 ? "active green" : "")">
             <span class="icon"> <i class="fa fa-cogs"></i> </span>
             <span class="text">Đang chuẩn bị</span>
         </div>
 
-        <!-- Đang giao -->
         <div class="step @((int)item.Status >= 2 ? "active green" : "")">
             <span class="icon"> <i class="fa fa-truck"></i> </span>
             <span class="text">Đang giao</span>
         </div>
-
+        <div class="step @((int)item.Status >= 3 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-check"></i> </span>
+            <span class="text">Đã nhận hàng</span>
+        </div>
+        <div class="step @((int)item.Status == 4 ? "active red" : "")">
+            <span class="icon"> <i class="fa fa-times-circle"></i> </span>
+            <span class="text">Đã hủy</span>
+        </div>
+        <div class="step @((int)item.Status == 6 ? "active blue" : "")">
+            <span class="icon"> <i class="fa fa-sync-alt"></i> </span>
+            <span class="text">Hoàn tiền</span>
+        </div>
     }
-    else
+    @if ((int)item.Status == 4)
     {
-        <!-- Đã nhận hàng -->
+        <div class="step @((int)item.Status >= 0 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-hourglass-start"></i> </span>
+            <span class="text">Chờ xử lý</span>
+        </div>
+        <div class="connector @((int)item.Status >= 0 ? "active" : "")"></div>
+        <div class="step @((int)item.Status == 4 ? "active red" : "")">
+            <span class="icon"> <i class="fa fa-times-circle"></i> </span>
+            <span class="text">Đã hủy</span>
+        </div>
+        <div class="step @((int)item.Status == 6 ? "active blue" : "")">
+            <span class="icon"> <i class="fa fa-sync-alt"></i> </span>
+            <span class="text">Hoàn tiền</span>
+        </div>
+    }
+    @if ((int)item.Status > 0 && (int)item.Status < 4 || (int)item.Status == 5)
+    {
+        <div class="step @((int)item.Status >= 0 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-hourglass-start"></i> </span>
+            <span class="text">Chờ xử lý</span>
+        </div>
+        <div class="connector @((int)item.Status >= 0 ? "active" : "")"></div>
+        <div class="step @((int)item.Status >= 1 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-cogs"></i> </span>
+            <span class="text">Đang chuẩn bị</span>
+        </div>
+        <div class="connector @((int)item.Status >= 1 ? "active" : "")"></div>
+        <div class="step @((int)item.Status >= 2 ? "active green" : "")">
+            <span class="icon"> <i class="fa fa-truck"></i> </span>
+            <span class="text">Đang giao</span>
+        </div>
+        <div class="connector @((int)item.Status >= 2 ? "active" : "")"></div>
         <div class="step @((int)item.Status >= 3 ? "active green" : "")">
             <span class="icon"> <i class="fa fa-check"></i> </span>
             <span class="text">Đã nhận hàng</span>
         </div>
     }
-
-    <!-- Đã hủy -->
-    <div class="step @((int)item.Status == 4 ? "active red" : "")">
-        <span class="icon"> <i class="fa fa-times-circle"></i> </span>
-        <span class="text">Đã hủy</span>
-    </div>
-
-    <!-- Hoàn tiền -->
-    <div class="step @((int)item.Status == 6 ? "active blue" : "")">
-        <span class="icon"> <i class="fa fa-sync-alt"></i> </span>
-        <span class="text">Hoàn tiền</span>
-    </div>
 </div>
 
 
 
 
-                        <!-- Buttons -->
+
                         <div class="d-flex justify-content-center align-items-center">
                             @if((int)item.Status == 0)
                             {
                                 <form method="post" asp-page-handler="CancelStatus">
-                                    <!-- Conditional Button for Canceling Order -->
                                     <input type="hidden" name="orderDetailId" value="@item.Id" />
                                     <button class="btn btn-danger mt-4">Huỷ đơn hàng</button>
                                 </form>
                                 
                             }
-                            @if((int)item.Status == 3)
+                            @if((int)item.Status == 2)
                             {
                                 <form method="post" asp-page-handler="ConfirmedReceipt" asp-route-Id="@item.Id">
                                     <input type="hidden" name="orderDetailId" value="@item.Id" />
