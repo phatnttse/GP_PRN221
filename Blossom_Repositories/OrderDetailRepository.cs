@@ -42,5 +42,9 @@ namespace Blossom_Repositories
         }
 
         public List<OrderDetail> GetOrderDetailsById(string username) => _orderDetailDAO.GetOrderDetailsByUserName(username).Result;
+
+        public List<OrderDetail> GetOrderDetailsBySellerId(string username) => _orderDetailDAO.GetOrderDetailsBySellerId(username).Result;
+
+        public bool UpdateOrderStatusByOrderDetailId(string orderDetailId, int status) => _orderDetailDAO.UpdateOrderStatusByOrderDetailId(orderDetailId, status).Result;
     }
 }

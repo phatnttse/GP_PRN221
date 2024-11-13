@@ -88,5 +88,34 @@ namespace Blossom_DAOs
 
             return Task.FromResult(orderDetails);
         }
+
+        public Task<List<OrderDetail>> GetOrderDetailsBySellerId(string accountId)
+        {
+            var orderDetails = _context.OrderDetails
+                .Include(od => od.Order)
+                .Include(od => od.Flower)
+                .Include(od => od.Seller)
+                .Where(od => od.SellerId == accountId)
+                .ToList();
+
+            return Task.FromResult(orderDetails);
+        }
+
+        public Task<bool> UpdateOrderStatusByOrderDetailId(string orderDetailId, int status)
+        {
+            var orderDetail = _context.OrderDetails
+                .FirstOrDefault(od => od.Id == orderDetailId);
+
+            if (orderDetail != null)
+            {
+                orderDetail.Status += status;
+
+                _context.SaveChanges();
+
+                return Task.FromResult(true);
+            }
+
+            return Task.FromResult(false);
+        }
     }
 }
