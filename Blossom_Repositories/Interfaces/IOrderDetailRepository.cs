@@ -1,4 +1,6 @@
-﻿using Blossom_BusinessObjects.Entities;
+﻿using Blossom_BusinessObjects;
+using Blossom_BusinessObjects.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +21,13 @@ namespace Blossom_Repositories.Interfaces
         List<OrderDetail> GetOrderDetailsBySellerId(string username);
 
         bool UpdateOrderStatusByOrderDetailId(string orderDetailId, int status);
+
+        decimal GetTotalRevenueAsync(DateTime startDate, DateTime endDate, string userId);
+        int GetTotalOrdersCountAsync(DateTime startDate, DateTime endDate, string userId);
+        int GetTotalFlowerViewsAsync(DateTime startDate, DateTime endDate, string userId);
+
+        List<DateTime> GetDateRangeList(DateTime startDate, DateTime endDate);
+
+        List<RevenueByDate> GetDailyRevenueAsync(DateTime startDate, DateTime endDate, string userId);
     }
 }

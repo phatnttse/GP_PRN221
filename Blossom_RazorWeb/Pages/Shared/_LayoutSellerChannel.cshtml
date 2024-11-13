@@ -14,6 +14,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link rel="stylesheet" href="~/css/app.min.css" asp-append-version="true" />
 
+    <style>
+        /* Optional styling */
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .btn-rounded {
+            border-radius: 50%;
+        }
+
+        .fs-20 {
+            font-size: 20px;
+        }
+
+        .ms-1 {
+            margin-left: 5px;
+        }
+
+        .mb-32 {
+            margin-bottom: 32px;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
 
@@ -179,6 +212,17 @@
                 <div class="side-nav-inner">
                     <ul class="side-nav-menu scrollable">
                         <li class="nav-item ms-2 mt-3">
+                            <a href="/SellerChannel/SellerDashboard/Index" class=" d-flex align-items-center">
+                                <span class="icon-holder">
+
+                                    <span class="material-icons">
+                                        bar_chart
+                                    </span>
+                                </span>
+                                <span class="title">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ms-2 mt-3">
                             <a href="/SellerChannel/FlowerManagement/Index" class=" d-flex align-items-center">
                                 <span class="icon-holder">
 
@@ -259,6 +303,44 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/app.min.js"></script>
     <script src="~/js/vendors.min.js"></script>
+
+    <script>
+
+        var revenueData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["RevenueData"]));
+
+        const labels = revenueData.map(item => item.Date);  
+
+        
+        const data = revenueData.map(item => item.TotalRevenue);  
+
+        const ctx = document.getElementById('revenue-chart').getContext('2d');
+
+        const revenueChart = new Chart(ctx, {
+            type: 'line', 
+            data: {
+                labels: labels,
+
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)', 
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', 
+                    fill: false, 
+                    tension: 0.4 
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    }
+                }
+            }
+        });
+    </script>
+
+
    
     @await RenderSectionAsync("Scripts", required: false)
 

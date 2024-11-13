@@ -1,0 +1,108 @@
+﻿@page
+@model Blossom_RazorWeb.Pages.SellerChannel.SellerDashboard.IndexModel
+@{
+    Layout = "_LayoutSellerChannel";
+
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="fw-bold">Lọc theo ngày</h5>
+        <div class="col-lg-4 mt-2">
+            <div class="form-group">
+                <form method="post" asp-page-handler="CalculateRevenue">
+                    <div class="input-daterange input-group" id="datepicker">
+                        <input asp-for="StartDate" class="form-control" type="date" placeholder="Ngày bắt đầu" />
+                        <input asp-for="EndDate" class="form-control" type="date" placeholder="Ngày kết thúc" />
+                    </div>
+
+                    <button type="submit" asp-page-handler="CalculateRevenue" class="btn btn-primary mt-3">Tính doanh thu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    
+    <div class="col-lg-4">
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title">Doanh thu</h5>
+                    <div class="ml-auto">
+                        <div class="avatar avatar-icon avatar-lg avatar-blue">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="mb-2 mt-3 fw-bold">
+                    @Model.TotalRevenue<span class="fs-20 ms-1">đ</span>
+                </h4>
+                <h6 class="text-muted mt-2 mb-0">
+                    @Model.StartDate - @Model.EndDate
+                </h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title">Lượt mua</h5>
+                    <div class="ml-auto">
+                        <div class="avatar avatar-icon avatar-lg avatar-red">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="mb-2 mt-3 fw-bold">
+                   @Model.OrderTotal <span class="fs-20 ms-1">đơn hàng</span>
+                </h4>
+                <h6 class="text-muted mt-2 mb-0">
+                    @Model.StartDate - @Model.EndDate
+                </h6>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-4">
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <h5 class="card-title">Lượt xem sản phẩm</h5>
+                    <div class="ml-auto">
+                        <div class="avatar avatar-icon avatar-lg avatar-green">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="mb-2 mt-3 fw-bold">
+                    @Model.TotalViews <span class="fs-20 ms-1">lượt xem</span>
+                </h4>
+                <h6 class="text-muted mt-2 mb-0">
+                    @Model.StartDate - @Model.EndDate
+                </h6>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Total Revenue</h5>
+                </div>
+                <div class="m-t-50 w-100" style="height: 330px">
+                    <canvas class="chart" id="revenue-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

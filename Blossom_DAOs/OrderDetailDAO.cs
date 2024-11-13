@@ -1,4 +1,5 @@
-﻿using Blossom_BusinessObjects.Entities;
+﻿using Blossom_BusinessObjects;
+using Blossom_BusinessObjects.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -117,5 +118,71 @@ namespace Blossom_DAOs
 
             return Task.FromResult(false);
         }
+
+         public async Task<decimal> GetTotalRevenueAsync(DateTime startDate, DateTime endDate, string userId)
+        {
+            var totalRevenue = await _context.Set<OrderDetail>()
+                .Where(o => o.CreatedAt >= startDate && o.CreatedAt <= endDate && !o.IsDeleted && o.Flower.SellerId.Equals(userId))
+                .SumAsync(o => o.Order.TotalPrice);
+
+            return totalRevenue;
+        }
+
+        public async Task<int> GetTotalOrdersCountAsync(DateTime startDate, DateTime endDate, string userId)
+        {
+            var totalOrdersCount = await _context.Set<OrderDetail>()
+                .Where(o => o.CreatedAt >= startDate && o.CreatedAt <= endDate && !o.IsDeleted && o.Flower.SellerId.Equals(userId))
+                .CountAsync();
+
+            return totalOrdersCount;
+        }
+
+        public async Task<int> GetTotalFlowerViewsAsync(DateTime startDate, DateTime endDate, string userId)
+        {
+            var totalFlowerViews = await _context.Flowers
+                .Where(f => f.CreatedAt >= startDate && f.CreatedAt <= endDate && f.SellerId.Equals(userId))
+                .SumAsync(f => f.Views);
+
+            return totalFlowerViews;
+        }
+        public List<DateTime> GetDateRangeList(DateTime startDate, DateTime endDate)
+        {
+            var dateList = new List<DateTime>();
+
+            for (var date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                dateList.Add(date);
+            }
+
+            return dateList;
+        }
+
+        public async Task<List<RevenueByDate>> GetDailyRevenueAsync(DateTime startDate, DateTime endDate, string userId)
+        {
+            var allDates = GetDateRangeList(startDate, endDate);
+
+            var dailyRevenue = await _context.Set<OrderDetail>()
+                .Where(o => o.CreatedAt >= startDate && o.CreatedAt <= endDate && o.Flower.SellerId.Equals(userId) && !o.IsDeleted)
+                .GroupBy(o => o.CreatedAt.Date) 
+                .Select(g => new RevenueByDate
+                {
+                    Date = g.Key,
+                    TotalRevenue = g.Sum(o => o.Order.TotalPrice)
+                })
+                .ToListAsync();
+
+            var result = allDates.Select(date =>
+            {
+                var revenue = dailyRevenue.FirstOrDefault(r => r.Date.Date == date.Date);
+                return new RevenueByDate
+                {
+                    Date = date,
+                    TotalRevenue = revenue != null ? revenue.TotalRevenue : 0 
+                };
+            }).ToList();
+
+            return result;
+        }
+
     }
 }

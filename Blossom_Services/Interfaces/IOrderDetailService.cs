@@ -1,4 +1,5 @@
-﻿using Blossom_BusinessObjects.Entities;
+﻿using Blossom_BusinessObjects;
+using Blossom_BusinessObjects.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,14 @@ namespace Blossom_Services.Interfaces
 
         bool UpdateOrderStatusByOrderDetailId(string orderDetailId, int status);
 
+        decimal GetTotalRevenueAsync(DateTime startDate, DateTime endDate);
+
+        int GetTotalOrdersCountAsync(DateTime startDate, DateTime endDate);
+
+        int GetTotalFlowerViewsAsync(DateTime startDate, DateTime endDate);
+
+        List<DateTime> GetDateRangeList(DateTime startDate, DateTime endDate);
+
+        List<RevenueByDate> GetDailyRevenueAsync(DateTime startDate, DateTime endDate);
     }
 }
