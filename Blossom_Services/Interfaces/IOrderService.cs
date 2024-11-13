@@ -20,5 +20,6 @@ namespace Blossom_Services.Interfaces
         bool DeleteOrder(string id);
 
         List<Order> GetOrdersById(string user);
+
     }
 }

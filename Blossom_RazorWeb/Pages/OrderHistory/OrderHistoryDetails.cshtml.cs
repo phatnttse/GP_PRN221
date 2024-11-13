@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Blossom_BusinessObjects.Enums;
 using Blossom_BusinessObjects;
+using Blossom_Services;
 
 namespace Blossom_RazorWeb.Pages.OrderHistory
 {
@@ -14,18 +15,21 @@ namespace Blossom_RazorWeb.Pages.OrderHistory
         private readonly IUserIdAssessor _userIdAssessor;
         private readonly IOrderDetailService _orderDetailService;
         private readonly IWalletLogService _walletLogService;
+        private readonly IAccountService _accountService;
 
         public OrderHistoryModel(
             IOrderService orderService, 
             IUserIdAssessor userIdAssessor, 
             IOrderDetailService orderDetailService,
-            IWalletLogService walletLogService
+            IWalletLogService walletLogService,
+            IAccountService accountService
             )
         {
             _orderService = orderService;
             _userIdAssessor = userIdAssessor;
             _orderDetailService = orderDetailService;
             _walletLogService = walletLogService;
+            _accountService = accountService;
         }
 
         public List<OrderDetail> OrderDetails { get; set; }
@@ -56,27 +60,74 @@ namespace Blossom_RazorWeb.Pages.OrderHistory
 
             var orderDetail = _orderDetailService.GetOrderDetail(orderDetailId);
 
-            
-
-            if (orderDetail != null &&
-                (orderDetail.Status == OrderDetailStatus.PENDING ))
+            if (orderDetail.PaymentMethod == PaymentMethodEnum.COD)
             {
-                orderDetail.Status = OrderDetailStatus.CANCELED;
-                _orderDetailService.UpdateOrderDetail(orderDetail);
+                TempData["Error"] = $"Phương thức thanh toán bởi SHIP {orderDetail.PaymentMethod} chưa hỗ trợ hủy!";
+            }
+
+            if (orderDetail.PaymentMethod == PaymentMethodEnum.WALLET)
+            {
+                if (orderDetail != null &&
+                (orderDetail.Status == OrderDetailStatus.PENDING))
+                {
+                    Account seller = await _accountService.GetAccountById(orderDetail.SellerId);
+                    Account user = await _accountService.GetAccountById(existingAccount);
+
+                    orderDetail.Status = OrderDetailStatus.CANCELED;
+                    _orderDetailService.UpdateOrderDetail(orderDetail);
 
 
-                decimal feeService = 5 / 100;
-                decimal calAmountForUser = orderDetail.Price;
-                decimal calAmoutnForSeller = calAmountForUser * feeService;
-                //handle balance for user
-                //handle balance for seller
-                var buyerLog = CreateWalletLog(existingAccount, calAmountForUser, WalletLogTypeEnum.ADD, WalletLogActorEnum.BUYER, 0);
-                var sellerLog = CreateWalletLog(orderDetail.SellerId, calAmoutnForSeller, WalletLogTypeEnum.ADD, WalletLogActorEnum.SELLER, 0);
-                _walletLogService.Create(buyerLog);
-                _walletLogService.Create(sellerLog);
-                TempData["Success"] = "Đơn hàng đã được hủy thành công.";
+                    decimal feeService = 5 / 100;
+                    decimal calAmountForUser = orderDetail.Price * orderDetail.Quantity;
+                    decimal calAmoutnForSeller = calAmountForUser * feeService;
+                    //handle balance for user
+                    user.Balance = user.Balance + calAmountForUser;
+                    seller.Balance = seller.Balance - calAmoutnForSeller;
+
+                    //handle balance for user 
+                    Account updateBalanceUser = await _accountService.UpdateAccount(user);
+                    //handle balance for seller
+                    Account updateBalanceSeller = await _accountService.UpdateAccount(seller);
+                    //handle balance for seller
+                    var buyerLog = CreateWalletLog(existingAccount, calAmountForUser, WalletLogTypeEnum.ADD, WalletLogActorEnum.BUYER, updateBalanceUser.Balance);
+                    var sellerLog = CreateWalletLog(orderDetail.SellerId, calAmoutnForSeller, WalletLogTypeEnum.SUBTRACT, WalletLogActorEnum.SELLER, updateBalanceSeller.Balance);
+                    _walletLogService.Create(buyerLog);
+                    _walletLogService.Create(sellerLog);
+                    TempData["Success"] = "Đơn hàng đã được hủy thành công.";
+                }
+                
             }
             return RedirectToPage();
+        }
+
+        public IActionResult OnPostConfirmedReceipt(string orderDetailId)
+        {
+            bool isUpdated = _orderDetailService.UpdateOrderStatusByOrderDetailId(orderDetailId, 3);
+
+            if (isUpdated)
+            {
+                TempData["SuccessConfirmedReceiptMessage"] = "Xác nh?n ?ã nh?n hàng";
+                return RedirectToPage();
+
+            }
+            TempData["ErrorMessage"] = "Không th? c?p nh?t tr?ng thái. Vui lòng th? l?i.";
+            return RedirectToPage();
+
+        }
+
+        public IActionResult OnPostCancelStatus(string orderDetailId)
+        {
+            bool isUpdated = _orderDetailService.UpdateOrderStatusByOrderDetailId(orderDetailId, 4);
+
+            if (isUpdated)
+            {
+                TempData["SuccessCancelMessage"] = "H?y ??n hàng thành công";
+                return RedirectToPage();
+
+            }
+            TempData["ErrorMessage"] = "Không th? c?p nh?t tr?ng thái. Vui lòng th? l?i.";
+            return RedirectToPage();
+
         }
 
         public async Task<IActionResult> OnPostDeliveredOrder(string orderDetailId)

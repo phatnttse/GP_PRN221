@@ -26,7 +26,7 @@ IUserIdAssessor userIdAccessor)
         }
 
         public List<Flower> Flowers { get; set; }
-        public string Message { get; set; }
+        public string ErrorMessage { get; set; }
 
 
         public async void OnGet()
@@ -38,24 +38,39 @@ IUserIdAssessor userIdAccessor)
         {
             try
             {
-                var currentUser = _userIdAccessor.GetCurrentUserId();
-                // Giả sử bạn có phương thức AddFlowerListingToCart trong service
-                if (currentUser != null)
+                var currentUserId = _userIdAccessor.GetCurrentUserId();
+               
+                if (currentUserId != null)
                 {
-                    await _cartItemService.AddFlowerListingToCart(currentUser, flowerId, 1);
+                    var cartItem = await _cartItemService.GetByUserAndFlowerAsync(currentUserId, flowerId);
+                    var flowerQuantity = await _flowerService.GetFlower(flowerId);
+                    if (cartItem != null)
+                    {
+                        if (cartItem.Quantity <= flowerQuantity.StockQuantity)
+                        {
+                            await _cartItemService.AddFlowerListingToCart(currentUserId, flowerId, 1);
+                        }
+                        if (cartItem.Quantity >= flowerQuantity.StockQuantity)
+                        {
+                            cartItem.Quantity = flowerQuantity.StockQuantity;
+                            await _cartItemService.AddFlowerListingToCart(currentUserId, flowerId, 0);
+                        }
 
-                    // Reload danh sách hoa sau khi thêm vào giỏ hàng
-                    Flowers = await _flowerService.GetFlowers();
-                    // Có thể bạn cần điều hướng người dùng đến giỏ hàng hoặc trang khác
-                    TempData["Message"] = "Hoa đã được thêm vào giỏ hàng!";
-                    return RedirectToPage("/CartItem");
+                        return RedirectToPage("/CartItem");
+
+                    }
+                    else 
+                    {
+                        await _cartItemService.AddFlowerListingToCart(currentUserId, flowerId, 1);
+                        return RedirectToPage("/Index"); 
+                    }
+
                 }
                 else
                 {
-                    TempData["LoginFailMessage"] = "Vui lòng đăng nhập!";
-                    return RedirectToPage("/Index");
+                    TempData["NotPermissionMessage"] = "Vui lòng đăng nhập!";
+                    return RedirectToPage("/Auth/Login");
                 }
-
 
             }
             catch (Exception ex)

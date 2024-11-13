@@ -1,4 +1,4 @@
-using Blossom_BusinessObjects;
+﻿using Blossom_BusinessObjects;
 using Blossom_BusinessObjects.Entities;
 using Blossom_BusinessObjects.Entities.Enums;
 using Blossom_Services.Interfaces;
@@ -19,6 +19,7 @@ namespace Blossom_RazorWeb.Pages
         private readonly ICartItemService _cartItemService;
         private readonly IAccountService _accountService;
         private readonly IWalletLogService _walletLogService;
+        private readonly IUserIdAssessor _userIdAssessor;
 
         public OrderModel(
             ICartItemService cartItemService,
@@ -26,7 +27,8 @@ namespace Blossom_RazorWeb.Pages
             IOrderService orderService,
             IOrderDetailService orderDetailService,
             IFlowerService flowerService,
-            IWalletLogService walletLogService
+            IWalletLogService walletLogService,
+            IUserIdAssessor userIdAssessor
         )
         {
             _cartItemService = cartItemService;
@@ -35,6 +37,7 @@ namespace Blossom_RazorWeb.Pages
             _orderDetailService = orderDetailService;
             _flowerService = flowerService;
             _walletLogService = walletLogService;
+            _userIdAssessor = userIdAssessor;
         }
 
         [BindProperty]
@@ -54,13 +57,12 @@ namespace Blossom_RazorWeb.Pages
         // GET method to initialize data
         public async Task<IActionResult> OnGetAsync()
         {
-            var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            if (userEmail == null)
+            var userId = _userIdAssessor.GetCurrentUserId();
+            if (userId == null)
             {
                 TempData["Error"] = "You do not have permission to do this function!";
                 return RedirectToPage("/Auth/Login");
             }
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (!string.IsNullOrEmpty(userId))
             {
                 
@@ -96,7 +98,7 @@ namespace Blossom_RazorWeb.Pages
         {
             try
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = _userIdAssessor.GetCurrentUserId();
                 if (string.IsNullOrEmpty(userId))
                 {
                     ModelState.AddModelError("", "User is not authenticated");
@@ -176,22 +178,37 @@ namespace Blossom_RazorWeb.Pages
                         };
                         Account seller = await _accountService.GetAccountById(flower.SellerId);
                         Account user = await _accountService.GetAccountById(userId);
-                        // calculator amount
-                        decimal feeService = 5 / 100;
-                        decimal calAmountForUser = flower.Price * cartItem.Quantity;
-                        decimal calAmoutnForSeller = calAmountForUser * feeService;
 
+                        if (selectedPaymentMethod.Equals(PaymentMethodEnum.WALLET)) {
+                            //check balance of user 
 
-                        //handle balance for user 
+                            // calculator amount
+                            decimal feeService = 5 / 100;
+                            decimal calAmountForUser = flower.Price * cartItem.Quantity;
+                            decimal calAmoutnForSeller = calAmountForUser * feeService;
+                            if (user.Balance.CompareTo(calAmountForUser) < 0)
+                            {
+                                TempData["Error"] = "Số dư hiện tại của bạn không đủ, vui lòng nạp thêm!";
+                                return RedirectToPage();
+                            }
 
-                        //handle balance for seller
+                            user.Balance = user.Balance - calAmountForUser;
+                            seller.Balance = seller.Balance + calAmoutnForSeller;
+
+                            //handle balance for user 
+                            Account updateBalanceUser = await _accountService.UpdateAccount(user);
+                            //handle balance for seller
+                            Account updateBalanceSeller = await _accountService.UpdateAccount(seller);
+                            var buyerLog = CreateWalletLog(userId, calAmountForUser, WalletLogTypeEnum.SUBTRACT, WalletLogActorEnum.BUYER, updateBalanceUser.Balance);
+                            var sellerLog = CreateWalletLog(flower.SellerId, calAmoutnForSeller, WalletLogTypeEnum.ADD, WalletLogActorEnum.SELLER, updateBalanceSeller.Balance);
+                            _walletLogService.Create(buyerLog); 
+                            _walletLogService.Create(sellerLog);
+                        }
+
 
                         // Add the order details
                         var createdOrderDetail = _orderDetailService.AddOrderDetail(orderDetail);
-                        var buyerLog = CreateWalletLog(userId, calAmountForUser, WalletLogTypeEnum.SUBTRACT, WalletLogActorEnum.BUYER, user.Balance);
-                        var sellerLog = CreateWalletLog(flower.SellerId, calAmoutnForSeller, WalletLogTypeEnum.ADD, WalletLogActorEnum.SELLER, seller.Balance);
-                        _walletLogService.Create(buyerLog);
-                        _walletLogService.Create(sellerLog);
+
 
                         if (!createdOrderDetail)
                         {

@@ -1,4 +1,5 @@
-﻿using Blossom_BusinessObjects.Entities.Enums;
+﻿using Blossom_BusinessObjects;
+using Blossom_BusinessObjects.Entities.Enums;
 using Blossom_Services.Interfaces;
 using Blossom_Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,13 @@ namespace Blossom_RazorWeb.Pages.Auth
     {
 
         private readonly IAccountService _accountService;
+        private readonly INotificationService _notificationService;
         private readonly EmailSender _emailSender;
-        public RegisterModel(IAccountService accountService, EmailSender emailSender)
+        public RegisterModel(IAccountService accountService, EmailSender emailSender, INotificationService notificationService)
         {
             _accountService = accountService;
             _emailSender = emailSender;
+            _notificationService = notificationService;
         }
 
         [BindProperty]
@@ -62,12 +65,26 @@ namespace Blossom_RazorWeb.Pages.Auth
                     // Prepare placeholders for the template
                     var placeholders = new Dictionary<string, string>
                     {
-                        { "name", FullName }, // User's name
+                        { "name", FullName },
                         { "link", "https://yourdomain.com/confirm?token=abc123" }
                     };
 
                     string emailBody = EmailTemplateHelper.GetEmailBody(templatePath, placeholders);
                     await _emailSender.SendEmailAsync(Email, "Account register successfully", emailBody);
+                    var user = await _accountService.GetAccount(Email);
+                    var notification = new Notification()
+                    {
+                        Title = $"Welcome {FullName} to your platform",
+                        Message = "Feel free to look around our app!",
+                        Type = NotificationTypeEnum.WELCOME,
+                        DestinationScreen = DestinationScreenEnum.HOME,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        IsDeleted = false,
+                        IsRead = false,
+                        ReceiverId = user.Id,
+                    };
+                    await _notificationService.PushNotificationAsync(notification);
                     return RedirectToPage("/Auth/Login");
                 }
                 else
