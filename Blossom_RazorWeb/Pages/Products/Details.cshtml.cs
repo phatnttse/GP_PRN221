@@ -57,7 +57,7 @@ namespace Blossom_RazorWeb.Pages.Products
             var userId = _userIdAssessor.GetCurrentUserId();
             if (userId == null)
             {
-                TempData["LoginFailMessage"] = "Authentication failed, please login to continue!";
+                TempData["NotPermissionMessage"] = "Authentication failed, please login to continue!";
                 return Redirect("/Auth/Login");
             }
             if (!ModelState.IsValid)

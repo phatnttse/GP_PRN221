@@ -411,18 +411,35 @@
 
                 <div class="col-sm-8 col-lg-3 d-flex gap-5 align-items-center justify-content-center justify-content-sm-end">
                     <ul class="d-flex justify-content-end list-unstyled m-0 align-items-center">
+                        @using Microsoft.AspNetCore.Http
+
+                        @{
+                            var avatar = Context.Session.GetString("Avatar");
+                        }
+
+                        @if (!string.IsNullOrEmpty(avatar))
+                        {
+                            <li class="position-relative d-flex align-items-center me-3">
+                                <a href="javascript:;" class="nav-link pe-3" onclick="toggleNotificationMenu()">
+                                    <img width="24px" src="/assets/images/notification-bell.svg" alt="Notifications" />
+                                    <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger" id="notificationCount"></span>
+                                </a>
+                                <div id="notificationMenu" class="dropdown-menu p-3" style="display: none; max-width: 400px;">
+                                    <div class="d-flex align-items-center justify-content-between mb-1 p-2">
+                                        <p class="fw-bold fs-16">Notifications</p>
+                                        <a href="javascript:void(0);" onclick="markAllAsRead()" class="text-decoration-underline">Mark all as read</a>
+                                    </div>
+                                    <div id="notificationList" style="max-height: 400px; overflow-y: auto;"></div>
+                                </div>
+                            </li>
+                        }
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle pe-3"
                                role="button"
                                id="users"
                                data-bs-toggle="dropdown"
                                aria-expanded="false">
-
-                                @using Microsoft.AspNetCore.Http
-
-                                @{
-                                    var avatar = Context.Session.GetString("Avatar");
-                                }
            
                                 @if (!string.IsNullOrEmpty(avatar))
                                     {
@@ -1059,3 +1076,72 @@
 
 </body>
 </html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        loadNotifications();
+        loadUnreadCount();
+    });
+
+    function toggleNotificationMenu() {
+        const menu = document.getElementById("notificationMenu");
+        menu.style.display = menu.style.display === "none" ? "block" : "none";
+    }
+
+    function loadNotifications() {
+        fetch("/api/Notification/all")
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById("notificationList");
+                if (data.length > 0) {
+                    list.innerHTML = data.map(renderNotificationItem).join("");
+                } else {
+                    list.innerHTML = "<div class='p-3'>No new notifications!</div>";
+                }
+            })
+            .catch(error => console.error('Error loading notifications:', error));
+    }
+
+    function loadUnreadCount() {
+        fetch("/api/Notification/unread-count")
+            .then(response => response.json())
+            .then(count => {
+                const notificationBadge = document.getElementById("notificationCount");
+                notificationBadge.innerText = count > 0 ? count : "";
+            })
+            .catch(error => console.error('Error loading unread count:', error));
+    }
+
+    function renderNotificationItem(notification) {
+        const icon = getNotificationIcon(notification.type);
+        return `
+                <div class="notification-item p-2">
+                    <div class="d-flex align-items-center">
+                        ${icon}
+                        <div class="ms-2">
+                            <strong>${notification.title}</strong>
+                            <p>${notification.message}</p>
+                        </div>
+                    </div>
+                </div>`;
+    }
+
+    function getNotificationIcon(type) {
+        switch (type) {
+            case 'WELCOME': return '<i class="bi bi-info-circle-fill text-primary" style="font-size: 1.5rem;"></i>';
+            case 'FLOWER_LISTING_STATUS': return '<i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>';
+            case 'ORDER_STATUS': return '<i class="bi bi-receipt-cutoff text-info" style="font-size: 1.5rem;"></i>';
+            case 'MARKETING': return '<i class="bi bi-megaphone-fill text-warning" style="font-size: 1.5rem;"></i>';
+            default: return '<i class="bi bi-bell-fill text-secondary" style="font-size: 1.5rem;"></i>';
+        }
+    }
+
+    function markAllAsRead() {
+        fetch("/api/Notification/mark-all-read", { method: "POST" })
+            .then(() => {
+                loadNotifications();
+                loadUnreadCount();
+            })
+            .catch(error => console.error('Error marking notifications as read:', error));
+    }
+</script>
