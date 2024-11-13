@@ -8,30 +8,35 @@ namespace Blossom_RazorWeb.Pages
 {
     public class CartItemModel : PageModel
     {
-        private readonly ICartItemService _context;
+        private readonly ICartItemService _cartItemService;
         private readonly IUserIdAssessor _userIdAccessor;
         private readonly IFlowerService _flowerService;
+        private readonly IAccountService _accountService;
 
 
-        public CartItemModel(ICartItemService context, IUserIdAssessor userIdAccessor, IFlowerService flowerService)
+        public CartItemModel(ICartItemService cartItemService, IUserIdAssessor userIdAccessor, IFlowerService flowerService, IAccountService accountService)
         {
-            _context = context;
+            _cartItemService = cartItemService;
             _userIdAccessor = userIdAccessor;
             _flowerService = flowerService;
+            _accountService = accountService;
         }
 
         public IEnumerable<CartItem> CartItem { get; set; } = default!;
         public IList<Flower> Flower { get; set; } = default!;
+
+        public decimal TotalPrice { get; set; }
+
 
         public async Task OnGetAsync()
         {
             var currentUser =  _userIdAccessor.GetCurrentUserId();
             if (currentUser != null)
             {
-                CartItem = (await _context.GetAllCartItemUserIdAsync(currentUser)).ToList();
+                CartItem = (await _cartItemService.GetAllCartItemUserIdAsync(currentUser)).ToList();
+                TotalPrice = CartItem.Sum(item => item.Quantity * item.Flower.Price);
             }
 
-            Flower = await _flowerService.GetFlowers();
         }
 
         public async Task<IActionResult> OnPostIncreaseCartItems(string flowerId, int quantity)
@@ -39,20 +44,18 @@ namespace Blossom_RazorWeb.Pages
             try
             {
                 var currentUser = _userIdAccessor.GetCurrentUserId();
-                // Gi? s? b?n có ph??ng th?c AddFlowerListingToCart trong service
-                var cartItem = await _context.GetByUserAndFlowerAsync(currentUser, flowerId);
+                var cartItem = await _cartItemService.GetByUserAndFlowerAsync(currentUser, flowerId);
                 var flowerQuantity = await _flowerService.GetFlower(flowerId);
 
                 if (cartItem.Quantity <= flowerQuantity.StockQuantity)
                 {
-                    await _context.AddFlowerListingToCart(currentUser, flowerId, 1);
+                    await _cartItemService.AddFlowerListingToCart(currentUser, flowerId, 1);
                 }
                 if (cartItem.Quantity >= flowerQuantity.StockQuantity)
                 {
                     cartItem.Quantity = flowerQuantity.StockQuantity;
-                    await _context.AddFlowerListingToCart(currentUser, flowerId, 0);
+                    await _cartItemService.AddFlowerListingToCart(currentUser, flowerId, 0);
                 }
-                // Có th? b?n c?n ?i?u h??ng ng??i dùng ??n gi? hàng ho?c trang khác
                 return RedirectToPage("/CartItem");
             }
             catch (Exception ex)
@@ -66,16 +69,16 @@ namespace Blossom_RazorWeb.Pages
             try
             {
                 var currentUser = _userIdAccessor.GetCurrentUserId();
-                // Gi? s? b?n có ph??ng th?c AddFlowerListingToCart trong service
-                await _context.ReduceFlowerListingQuantityInCart(currentUser, flowerId, 1);
-                var cartItem = await _context.GetByUserAndFlowerAsync(currentUser, flowerId);
+                var cartItem = await _cartItemService.GetByUserAndFlowerAsync(currentUser, flowerId);
 
-                if (cartItem.Quantity <= 0)
+                if (cartItem.Quantity - 1 <= 0)
                 {
-                    // N?u s? l??ng <= 0, xóa s?n ph?m kh?i gi? hàng
-                    await _context.DeleteCartItem(currentUser, flowerId);
+                    await _cartItemService.DeleteCartItem(currentUser, flowerId);
+                    return RedirectToPage("/CartItem");
                 }
-                // Có th? b?n c?n ?i?u h??ng ng??i dùng ??n gi? hàng ho?c trang khác
+
+                await _cartItemService.AddFlowerListingToCart(currentUser, flowerId, -1);
+
                 return RedirectToPage("/CartItem");
             }
             catch (Exception ex)
@@ -89,10 +92,25 @@ namespace Blossom_RazorWeb.Pages
             try
             {
                 var currentUser = _userIdAccessor.GetCurrentUserId();
-                // Gi? s? b?n có ph??ng th?c AddFlowerListingToCart trong service
-                await _context.DeleteCartItem(currentUser, flowerId);
+                await _cartItemService.DeleteCartItem(currentUser, flowerId);
 
-                // Có th? b?n c?n ?i?u h??ng ng??i dùng ??n gi? hàng ho?c trang khác
+                return RedirectToPage("/CartItem");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToPage();
+            }
+        }
+
+        public async Task<IActionResult> OnPostClearCart()
+        {
+            try
+            {
+                var currentUserId = _userIdAccessor.GetCurrentUserId();
+                Account account = _accountService.GetAccountById(currentUserId).Result;
+
+                await _cartItemService.DeleteAllByUserAsync(account);
+
                 return RedirectToPage("/CartItem");
             }
             catch (Exception ex)

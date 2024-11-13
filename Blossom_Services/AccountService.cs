@@ -23,6 +23,6 @@ namespace Blossom_Services
         public Task<bool> Logout() => _accountRepository.Logout();
         public Task<List<string>> GetRoles(Account account) => _accountRepository.GetRoles(account);
         public Task<Account> UpdateAccount(Account account) => _accountRepository.UpdateAccount(account);
-
+        public Task<List<Account>> GetAccounts() => _accountRepository.GetAccounts();
     }
 }

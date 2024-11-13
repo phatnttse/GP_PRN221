@@ -20,6 +20,8 @@ namespace Blossom_BusinessObjects.Entities
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Balance { get; set; }
         public double FeeService { get; set; }
+
+        public bool IsBanned => LockoutEnd.HasValue && LockoutEnd.Value > DateTimeOffset.Now;
         /// <summary>
         /// Navigation property for the roles this user belongs to.
         /// </summary>
