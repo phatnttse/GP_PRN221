@@ -348,6 +348,104 @@
             width: 24px;
             height: 24px;
         }
+        .bread-crumb {
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-height: 280px;
+  z-index: 7;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 100px;
+  padding-bottom: 60px;
+}
+
+
+
+
+.bread-crumb .title-breadcrumb {
+  text-align: center;
+  font-size: 30px;
+  color: #fff;
+  font-weight: bold;
+  position: relative;
+  z-index: 8;
+}
+
+.bread-crumb .breadcrumb {
+  margin: 0;
+  font-size: 14px;
+  padding: 15px 10px;
+  border-radius: 0;
+  font-weight: bold;
+  line-height: 24px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 8;
+  display: flex;
+  justify-content: center;
+}
+
+.bread-crumb .breadcrumb li {
+  display: inline;
+}
+
+.bread-crumb .breadcrumb li > a {
+  color: #fff;
+}
+
+.bread-crumb .breadcrumb li > a > span {
+  color: #fff;
+}
+
+.bread-crumb .breadcrumb li span {
+  display: inline;
+  color: #fff;
+}
+
+.bread-crumb .breadcrumb li .mr_lr {
+  padding: 0px 3px;
+  color: #fff;
+}
+
+.bread-crumb .breadcrumb li .mr_lr svg {
+  width: 10px;
+  height: 10px;
+  margin-top: -2px;
+}
+
+.bread-crumb .breadcrumb li a:hover,
+.bread-crumb .breadcrumb li.active,
+.bread-crumb .breadcrumb li strong {
+  color: #fff;
+  font-weight: bold;
+}
+
+.bread-crumb .breadcrumb li a:hover span,
+.bread-crumb .breadcrumb li.active span,
+.bread-crumb .breadcrumb li strong span {
+  color: #fff;
+  font-weight: bold;
+}
+
+.bread-crumb:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+
+
 
     </style>
 </head>
@@ -378,7 +476,7 @@
                 <div class="col-lg-6">
                     <ul class="header-page navbar-nav list-unstyled d-flex flex-row gap-3 gap-lg-5 justify-content-center flex-wrap align-items-center mb-0 fw-bold text-uppercase text-dark">
                         <li class="nav-item active">
-                            <a asp-page="/Products" class="nav-link">Sản phẩm</a>
+                            <a asp-page="/Products/Index" class="nav-link">Sản phẩm</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle pe-3" role="button" id="pages" data-bs-toggle="dropdown" aria-expanded="false">Trang</a>
@@ -521,18 +619,14 @@
                             </a>
                         </li>
                         <li class="position-relative d-flex align-items-center">
-                            <a role="button"
+                            <a 
                                class="p-2 mx-1 nav-link"
-                               data-bs-toggle="offcanvas"
-                               data-bs-target="#offcanvasCart"
-                               aria-controls="offcanvasCart">
+                               asp-page="/CartItem"
+                              >
                                 <svg width="24" height="24">
                                     <use xlink:href="#shopping-bag"></use>
                                 </svg>
-                                <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"
-                                      id="cartItemCount">
-                                    5
-                                </span>
+                                
                             </a>
                         </li>
                     </ul>
@@ -715,60 +809,6 @@
     <script src="~/assets/js/plugins.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-
-    <div class="offcanvas offcanvas-end"
-         data-bs-scroll="true"
-         tabindex="-1"
-         id="offcanvasCart">
-        <div class="offcanvas-header justify-content-center">
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="order-md-last">
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-dark">Giỏ hàng của bạn</span>
-                    <span class="badge bg-secondary rounded-pill">3</span>
-                </h4>
-                <ul class="list-group mb-5">
-
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <h6 class="my-0">Hoa hồng</h6>
-                            <small class="text-body-secondary">x3</small>
-                        </div>
-                        <span class="text-body-secondary">100.000đ</span>
-                    </li>
-
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>Tổng tiền</span>
-                        <strong class="text-danger">Tổng tiền</strong>
-                    </li>
-                </ul>
-                <button mat-raised-button
-                        href="/cart"
-                        class="w-100 btn btn-primary btn-lg mb-3"
-                        type="button"
-                        data-bs-dismiss="offcanvas"
-                        aria-label="Close"
-                        color="primary">
-                    Xem giỏ hàng
-                </button>
-
-                <button mat-raised-button
-                        href="/order"
-                        class="w-100 btn btn-primary btn-lg"
-                        type="button"
-                        data-bs-dismiss="offcanvas"
-                        aria-label="Close"
-                        color="accent">
-                    Tiếp tục đặt hàng
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- Offcanvas Tìm Kiếm -->
     <div class="offcanvas offcanvas-top"
