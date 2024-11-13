@@ -90,7 +90,9 @@ namespace Blossom_DAOs
                 UserName = email,
                 Email = email,
                 Gender = gender,
-                Avatar = "assets/images/avatar.svg",
+                Address = "",
+                Avatar = "/assets/images/avatar.svg",
+                Balance = 0,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
             };
@@ -130,6 +132,19 @@ namespace Blossom_DAOs
         public async Task<List<string>> GetRoles(Account account)
         {
             return (await _userManager.GetRolesAsync(account)).ToList();
+        }
+
+        public async Task<Account> UpdateAccount(Account account)
+        {
+            var result = await _userManager.UpdateAsync(account);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new Exception($"Cập nhật tài khoản thất bại: {errors}");
+            }
+
+            return account;
         }
     }
 }

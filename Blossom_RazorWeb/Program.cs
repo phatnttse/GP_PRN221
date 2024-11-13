@@ -1,9 +1,12 @@
+using Blossom_BusinessObjects.Configurations;
 using Blossom_BusinessObjects.Entities;
 using Blossom_DAOs;
 using Blossom_Repositories;
 using Blossom_Repositories.Interfaces;
 using Blossom_Services;
 using Blossom_Services.Interfaces;
+using Blossom_Utilities;
+using Blossom_Utilities.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -25,6 +28,8 @@ namespace Blossom_RazorWeb
             {
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly(migrationsAssembly));
             });
+
+            builder.Services.Configure<MomoConfig>(builder.Configuration.GetSection("Momo"));
 
             // Add Identity
             builder.Services.AddIdentity<Account, Role>()
@@ -50,6 +55,8 @@ namespace Blossom_RazorWeb
                    options.LoginPath = "/Auth/Login";
                    options.LogoutPath = "/Auth/Logout";
                  });
+
+            builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration"));
 
 
             builder.Services.AddScoped<AccountDAO>();
@@ -77,6 +84,12 @@ namespace Blossom_RazorWeb
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<ICartItemService, CartItemService>();
             builder.Services.AddScoped<IUserIdAssessor, UserIdAccessor>();
+            builder.Services.AddScoped<WalletLogDAO>();
+            builder.Services.AddScoped<IWalletLogRepository, WalletLogRepository>();
+            builder.Services.AddScoped<IWalletLogService, WalletLogService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddHttpClient();
+            builder.Services.AddScoped<EmailSender>();
 
             // Add services to the container.
             builder.Services.AddRazorPages();
@@ -92,6 +105,7 @@ namespace Blossom_RazorWeb
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

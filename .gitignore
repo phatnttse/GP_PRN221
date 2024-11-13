@@ -13,6 +13,8 @@ x86/
 bin/
 obj/
 
+
+
 # .NET Core
 project.lock.json
 project.fragment.lock.json
@@ -20,7 +22,8 @@ project.fragment.lock.json
 *.db-journal
 
 # ASP.NET
-# appsettings*.json
+appsettings*.json
+appsettings.json
 *.publish.xml
 *.pdb
 *.cache

@@ -1,4 +1,5 @@
 ﻿@page
+@using Blossom_BusinessObjects.Entities.Enums
 @model Blossom_RazorWeb.Pages.OrderHistory.OrderHistoryModel
 @{
 }
@@ -27,11 +28,11 @@
                                     <span class="fw-bold text-black">Thông tin sản phẩm</span>
                                     <figure class="itemside mb-3">
                                         <div class="aside">
-                                            <img src="product_image_url.jpg" class="img-sm border" />
+                                            <img src="@item.Flower.ImageUrl" class="img-sm border" />
                                         </div>
                                         <figcaption class="info align-self-center">
                                             <p class="title">@item.Flower.Name <br />x @item.Quantity</p>
-                                            <span class="text-black">300,000₫</span>
+                                            <span class="text-black">@item.Price</span>
                                         </figcaption>
                                     </figure>
                                 </div>
@@ -49,7 +50,7 @@
                                 </div>
                                 <div class="col">
                                     <strong class="fw-bold text-black">Thanh toán</strong> <br />
-                                    <span class="text-black">COD</span>
+                                    <span class="text-black">@item.PaymentMethod</span>
                                 </div>
                                 <div class="col">
                                     <strong class="fw-bold text-black">Ngày đặt hàng</strong> <br />
@@ -129,6 +130,25 @@
                     </div>
                 }
             </article>
+            
+        </div>
+        <div style="margin-top: 10px">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                        <a class="page-link" href="?PageIndex=@(Model.PageIndex - 1)">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                            <a class="page-link" href="?PageIndex=@i">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="?PageIndex=@(Model.PageIndex + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </section>
 

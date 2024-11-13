@@ -21,6 +21,7 @@
         <div class="row">
             <!-- Left Column: Buyer Information -->
             <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+                <!-- Buyer Information -->
                 <div class="card p-4">
                     <h5 class="my-4 fw-bold">Buyer Information</h5>
                     <div class="mb-3">
@@ -80,14 +81,19 @@
                     <h4 class="text-center text-danger mb-4">Total Price: <span>@Model.TotalPrice.ToString("N0")₫</span></h4>
 
                     <!-- Payment Methods -->
+                    <!-- Payment Methods -->
                     <h5 class="fw-bold mb-3 text-center">Payment Methods</h5>
                     <div class="d-flex justify-content-center">
                         <!-- COD Payment Option -->
-                        <button type="button" class="btn btn-lg btn-outline-success shadow-sm">
-                            <i class="bi bi-cash"></i> Pay by COD
-                        </button>
+                        <div>
+                            <input type="radio" id="cod" name="paymentMethod" value="COD" required />
+                            <label for="cod">Pay by COD</label>
+                        </div>
+                        <div class="ms-3">
+                            <input type="radio" id="wallet" name="paymentMethod" value="WALLET" />
+                            <label for="wallet">Pay by Wallet</label>
+                        </div>
                     </div>
-
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-lg btn-primary shadow-sm">
                             <i class="bi bi-cart-check"></i> Create Order

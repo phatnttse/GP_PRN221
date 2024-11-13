@@ -17,6 +17,8 @@
         <p><strong>Status:</strong> @Model.Flower.Status</p>
         <p><strong>Category:</strong> @Model.Flower.FlowerCategory?.Name</p>
         <p><strong>Views:</strong> @Model.Flower.Views</p>
+        <p><strong>Flower Expire Date:</strong> @Model.Flower.FlowerExpireDate</p>
+        <p><strong>Expire Date:</strong> @Model.Flower.ExpireDate</p>
 
         @if (Model.Flower.Status == Blossom_BusinessObjects.Entities.Enums.FlowerStatus.PENDING)
         {

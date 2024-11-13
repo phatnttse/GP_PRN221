@@ -446,8 +446,20 @@ p {
                                 </li>
                             </ul>
                         </li>
+                        @using Microsoft.AspNetCore.Http
+                        @{
+                            var role = Context.Session.GetString("Role"); 
+                        }
+
                         <li class="nav-item active">
-                            <a asp-page="/SellerChannel/Index" class="nav-link">Kênh người bán</a>
+                            @if (role == "ADMIN")
+                            {
+                                <a asp-page="/Admin/FlowerManagement/Index" class="nav-link">Kênh Admin</a>
+                            }
+                            else
+                            {
+                                <a asp-page="/SellerChannel/Index" class="nav-link">Kênh người bán</a>
+                            }
                         </li>
                     </ul>
                 </div>
@@ -489,12 +501,25 @@ p {
                                                 account_circle
                                             </span>
 
-                                            <a class="text-decoration-none">
+                                            <a class="text-decoration-none" asp-page="/Profile/Index">
                                                 Hồ sơ
                                             </a>
                                         </div>
                                     </li>
-                                   
+
+                                    <li>
+                                        <div
+                                             class="dropdown-item d-flex align-items-center header-menu-item">
+                                            <span class="material-icons me-2">
+                                                wallet
+                                            </span>
+
+                                            <a class="text-decoration-none" asp-page="/Wallet/Index">
+                                                Ví của tôi
+                                            </a>
+                                        </div>
+                                    </li>
+
                                     <li>
                                         <div routerLink="/OrderHistory/OrderHistoryDetails"
                                              class="dropdown-item d-flex align-items-center header-menu-item">
