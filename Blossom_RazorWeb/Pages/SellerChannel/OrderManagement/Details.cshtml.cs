@@ -42,7 +42,7 @@ namespace Blossom_RazorWeb.Pages.SellerChannel.OrderManagement
             if (isUpdated)
             {
                 TempData["SuccessCancelMessage"] = "Hủy đơn hàng thành công";
-                return RedirectToPage("/SellerChannel/OrderManagement/Index");
+                return RedirectToPage("/SellerChannel/OrderManagement/Index"); 
 
             }
             TempData["ErrorMessage"] = "Không thể cập nhật trạng thái. Vui lòng thử lại.";
