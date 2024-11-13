@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blossom_Services", "Blossom
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blossom_RazorWeb", "Blossom_RazorWeb\Blossom_RazorWeb.csproj", "{4038345D-5604-49ED-8F82-99F5192F2B5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blossom_Utilities", "Blossom_Utilities\Blossom_Utilities.csproj", "{95E1DC1C-9C53-43B1-8C97-4BA005C8E480}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blossom_Utilities", "Blossom_Utilities\Blossom_Utilities.csproj", "{95E1DC1C-9C53-43B1-8C97-4BA005C8E480}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
