@@ -25,7 +25,7 @@
         <div class="d-flex align-items-center justify-content-end flex-wrap mb-3">
             <div class="d-flex align-items-center">
                 <!-- Thêm d-flex vào đây -->
-                <a href="./../../SellerChannel/OrderManagement/Index" class="btn btn-warning me-2 fs-16 p-3 mb-2 me-3">
+                <a href="./../../SellerChannel/OrderManagement/Index" class="btn btn-warning me-2 fs-16 p-3 mb-2 me-3 text-white">
                     Quay lại
                     <i class="bi bi-reply"></i>
                 </a>
@@ -35,7 +35,7 @@
                         <form method="post" asp-page-handler="CancelStatus">
                             <!-- Conditional Button for Canceling Order -->
                             <input type="hidden" name="orderDetailId" value="@Model.OrderDetail.Id" />
-                            <button class="btn btn-success fs-16 p-3 mb-2 me-3">
+                            <button class="btn btn-danger fs-16 p-3 mb-2 me-3">
                                 Huỷ đơn hàng
                                 <i class="bi bi-x-circle"></i>
                             </button>
@@ -71,26 +71,26 @@
                 <div class="col-sm-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title fs-24 fw-bold">
+                            <h5 class="card-title fs-24 fw-bold mb-4 text-danger">
                                 <i class="bi bi-person"></i>
-                                Thông tin nhận hàng
+                                Thông tin nhận hàng:
                             </h5>
-                            <p class="fs-16">
+                            <p class="fs-16 text-black">
                                 <i class="bi bi-person"></i>
                                 <strong> Tên người nhận:</strong>
                                 @Model.OrderDetail.Order.BuyerName
                             </p>
-                            <p class="fs-16">
+                            <p class="fs-16 text-black">
                                 <i class="bi bi-envelope"></i>
                                 <strong>Email:</strong>
                                 @Model.OrderDetail.Order.BuyerEmail
                             </p>
-                            <p class="fs-16 mt-3">
+                            <p class="fs-16 mt-3 text-black">
                                 <i class="bi bi-phone"></i>
                                 <strong>Số điện thoại:</strong>
                                 @Model.OrderDetail.Order.BuyerPhone
                             </p>
-                            <p class="fs-16 mt-3">
+                            <p class="fs-16 mt-3 text-black">
                                 <i class="bi bi-house-door"></i>
                                 <strong>Địa chỉ giao hàng:</strong>
                                 @Model.OrderDetail.Order.BuyerAddress
@@ -103,25 +103,25 @@
                 <div class="col-sm-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title fs-24 fw-bold">
+                            <h5 class="card-title fs-24 fw-bold mb-4 text-danger">
                                 <i class="bi bi-cart"></i>
                                 Thông tin đơn hàng
                             </h5>
-                            <p class="fs-16">
+                            <p class="fs-16 text-black">
                                 <i class="bi bi-file-earmark-text"></i>
                                 <strong> Mã đơn hàng:</strong> @Model.OrderDetail.Order.Id
                             </p>
-                            <p class="fs-16">
+                            <p class="fs-16 text-black">
                                 <i class="bi bi-calendar"></i>
                                 <strong>Ngày đặt hàng:</strong>
                                 @Model.OrderDetail.Order.CreatedAt.ToString("dd/MM/yyyy")
                             </p>
-                            <p class="fs-16">
+                            <p class="fs-16 text-black">
                                 <i class="bi bi-currency-dollar"></i>
                                 <strong>Giá trị đơn hàng:</strong>
                                 @Model.OrderDetail.Order.TotalPrice.ToString("C0") VND
                             </p>
-                            <p class="fs-16">
+                            <p class="fs-16 text-black">
                                 <i class="bi bi-check-circle"></i>
                                 <strong>Trạng thái:</strong>
                                 @Model.OrderDetail.Status
@@ -134,33 +134,33 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title fs-24 fw-bold">
+                            <h5 class="card-title fs-24 fw-bold mb-5 text-danger">
                                 <i class="bi bi-flower"></i>
-                                Thông tin sản phẩm
+                                Thông tin sản phẩm:
                             </h5>
                             <div class="d-flex">
-                                <img src="https://via.placeholder.com/200" alt="Flower Image"
+                                <img src="@Model.OrderDetail.Flower.ImageUrl" alt="Flower Image"
                                      class="img-fluid rounded-3"
                                      style="max-width: 200px; max-height: 200px; object-fit: cover; margin-right: 24px;" />
                                 <div>
-                                    <p class="fs-16">
+                                    <p class="fs-16 text-black">
                                         <i class="bi bi-bag"></i>
                                         <strong>Tên sản phẩm:</strong>
                                         @Model.OrderDetail.Flower.Name
                                     </p>
-                                    <p class="fs-16">
+                                    <p class="fs-16 text-black">
                                         <i class="bi bi-card-text"></i>
                                         <strong>Mô tả sản phẩm:</strong>
                                         @Model.OrderDetail.Flower.Description
                                     </p>
-                                    <p class="fs-16">
+                                    <p class="fs-16 text-black">
                                         <i class="bi bi-currency-dollar"></i>
                                         <strong>Giá:</strong>
                                         @Model.OrderDetail.Flower.Price
                                     </p>
-                                    <p class="fs-16">
-                                        <i class="bi bi-currency-dollar"></i>
-                                        <strong>Số lượng đơn:</strong>
+                                    <p class="fs-16 text-black">
+                                        <i class="bi bi-box"></i>
+                                        <strong>Số lượng:</strong>
                                         @Model.OrderDetail.Quantity
                                     </p>
                                 </div>

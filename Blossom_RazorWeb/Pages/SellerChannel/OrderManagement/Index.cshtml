@@ -1,5 +1,6 @@
 ﻿@page
 @model Blossom_RazorWeb.Pages.SellerChannel.OrderManagement.IndexModel
+@using Blossom_BusinessObjects.Entities.Enums;
 @{
     Layout = "_LayoutSellerChannel";
 }
@@ -37,13 +38,19 @@
                     <td>@item.Order.BuyerName</td>
                     <td>@item.Order.BuyerPhone</td>
                     <td>@item.Flower.Name</td>
-                    <td>@item.Order.TotalPrice VND</td>
+                    <td>@item.Order.TotalPrice.ToString("N0") VND</td>
                     <td>@item.Order.CreatedAt.ToString("dd/MM/yyyy")</td>
                     <td class="fw-bold">
-                        <span class="">
+                        <span class="@(item.Status == OrderDetailStatus.PENDING ? "text-warning" :
+                   item.Status == OrderDetailStatus.PREPARING ? "text-primary" :
+                   item.Status == OrderDetailStatus.SHIPPED ? "text-info" :
+                   item.Status == OrderDetailStatus.DELIVERED ? "text-success" :
+                   item.Status == OrderDetailStatus.CANCELED ? "text-danger" :
+                   "text-muted")">
                             @item.Status
                         </span>
                     </td>
+
                     <td>
                         <a href="/SellerChannel/OrderManagement/Details?id=@item.Id" type="button" class="btn btn-primary">
                             Chỉnh sửa
